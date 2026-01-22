@@ -24,81 +24,156 @@ public class Sigma {
         Loop:
         while (sc.hasNextLine()) {
             String line = sc.nextLine();
-            String[] parts = line.trim().split("\\s+", 2);
-            String s = parts[0];
             System.out.println(indentation + "_".repeat(width));
-            switch (s) {
-                case "bye": {
-                    break Loop;
-                }
-                case "list": {
-                    Integer num = 1;
-                    if (todo.isEmpty()) {
-                        System.out.println(indentation + "Todo list is empty :)");
-                    } else {
-                        System.out.println(indentation + "Here are the tasks in your list:");
-                        for (Task task : todo) {
-                            System.out.println(indentation + String.valueOf(num) + "." + task);
-                            num++;
+            try {
+                String[] arr = handleCommand(line);
+                String command = arr[0];
+                switch (command) {
+                    case "bye":
+                        break Loop;
+                    case "list":
+                        Integer num = 1;
+                        if (todo.isEmpty()) {
+                            System.out.println(indentation + "Todo list is empty :)");
+                        } else {
+                            System.out.println(indentation + "Here are the tasks in your list:");
+                            for (Task task : todo) {
+                                System.out.println(indentation + String.valueOf(num) + "." + task);
+                                num++;
+                            }
                         }
+                        break;
+                    case "mark": {
+                        int index = Integer.parseInt(arr[2]) - 1;
+                        Task task = todo.get(index);
+                        task.markAsDone();
+                        System.out.println(indentation + "Nice! I've marked this task as done:");
+                        System.out.println(indentation + "  " + task);
+                        break;
                     }
-                    break;
+                    case "unmark": {
+                        int index = Integer.parseInt(arr[2]) - 1;
+                        Task task = todo.get(index);
+                        task.unmarkDone();
+                        System.out.println(indentation + "Ok, I've marked this task as not done yet:");
+                        System.out.println(indentation + "  " + task);
+                        break;
+                    }
+                    case "todo": {
+                        Task task = new ToDos(arr[1]);
+                        todo.add(task);
+                        System.out.println(indentation + "Got it. I've added this task:");
+                        System.out.println(indentation + "  " + task);
+                        System.out.println(indentation + String.format("Now you have %d tasks in the list.", todo.size()));
+                        break;
+                    }
+                    case "deadline": {
+                        Task task = new Deadlines(arr[1], arr[4]);
+                        todo.add(task);
+                        System.out.println(indentation + "Got it. I've added this task:");
+                        System.out.println(indentation + "  " + task);
+                        System.out.println(indentation + String.format("Now you have %d tasks in the list.", todo.size()));
+                        break;
+                    }
+                    case "event": {
+                        Task task = new Events(arr[1], arr[3], arr[4]);
+                        todo.add(task);
+                        System.out.println(indentation + "Got it. I've added this task:");
+                        System.out.println(indentation + "  " + task);
+                        System.out.println(indentation + String.format("Now you have %d tasks in the list.", todo.size()));
+                        break;
+                    }
+                    default:
                 }
-                case "mark": {
-                    int index = Integer.parseInt(parts[1]) - 1;
-                    Task task = todo.get(index);
-                    task.markAsDone();
-                    System.out.println(indentation + "Nice! I've marked this task as done:");
-                    System.out.println(indentation + "  " + task);
-                    break;
-                }
-                case "unmark": {
-                    int index = Integer.parseInt(parts[1]) - 1;
-                    Task task = todo.get(index);
-                    task.unmarkDone();
-                    System.out.println(indentation + "Ok, I've marked this task as not done yet:");
-                    System.out.println(indentation + "  " + task);
-                    break;
-                }
-                case "todo": {
-                    Task task = new ToDos(parts[1]);
-                    todo.add(task);
-                    System.out.println(indentation + "Got it. I've added this task:");
-                    System.out.println(indentation + "  " + task);
-                    System.out.println(indentation + String.format("Now you have %d tasks in the list.", todo.size()));
-                    break;
-                }
-                case "deadline": {
-                    String[] p2 = parts[1].split("\\s+/by\\s+", 2);
-                    Task task = new Deadlines(p2[0], p2[1]);
-                    todo.add(task);
-                    System.out.println(indentation + "Got it. I've added this task:");
-                    System.out.println(indentation + "  " + task);
-                    System.out.println(indentation + String.format("Now you have %d tasks in the list.", todo.size()));
-                    break;
-                }
-                case "event": {
-                    String[] p2 = parts[1].split("\\s+/from\\s+", 2);
-                    String description = p2[0].trim();
-                    String[] p3 = p2[1].trim().split("\\s+/to\\s+", 2);
-                    String from = p3[0].trim();
-                    String to = p3[1].trim();
-                    Task task = new Events(description, from, to);
-                    todo.add(task);
-                    System.out.println(indentation + "Got it. I've added this task:");
-                    System.out.println(indentation + "  " + task);
-                    System.out.println(indentation + String.format("Now you have %d tasks in the list.", todo.size()));
-                    break;
-                }
-                default: {
-                    System.out.println(indentation + "added: " + line);
-                    Task task = new Task(line);
-                    todo.add(task);
-                }
+
+            } catch (MissingElementException e) {
+                System.out.println(indentation + e.getMessage());
+            } catch (UnknownCommandException e) {
+                System.out.println(indentation + "Sorry, I don't know what that means QAQ");
+            } finally {
+                System.out.println(indentation + "_".repeat(width));
             }
-            System.out.println(indentation + "_".repeat(width));
+
         }
         System.out.println(indentation + "Bye. Hope to see you again soon!");
         System.out.println(indentation + "_".repeat(width));
+    }
+
+    public static String[] handleCommand(String line) throws MissingElementException, UnknownCommandException {
+        String[] parts = line.trim().split("\\s+", 2);
+        String s = parts[0];
+        switch (s) {
+            case "bye":{
+                return new String[] {"bye", "", "", "", ""};
+            }
+            case "list": {
+                return new String[]{"list", "", "", "", ""};
+            }
+            case "mark": {
+                if (parts.length == 1) {
+                    throw new MissingElementException("Oops, missing number. Which task do you want to mark?");
+                } else {
+                    String taskNum = parts[1];
+                    return new String[]{"mark", "", taskNum, "", ""};
+                }
+            }
+            case "unmark": {
+                if (parts.length == 1) {
+                    throw new MissingElementException("Oops, missing number. Which task do you want to unmark?");
+                } else {
+                    String taskNum = parts[1];
+                    return new String[] {"unmark", "", taskNum, "", ""};
+                }
+            }
+            case "todo": {
+                if (parts.length == 1) {
+                    throw new MissingElementException("Oops, could you give me the todo description?");
+                } else {
+                    String description = parts[1];
+                    return new String[]{"todo", description, "", "", ""};
+                }
+            }
+            case "deadline": {
+                if (parts.length == 1) {
+                    throw new MissingElementException("Could you give me task description and deadline?");
+                } else {
+                    String[] p2 = parts[1].split("\\s+/by\\s+", 2);
+                    if (p2.length == 1) {
+                        throw new MissingElementException("Could you give me a deadline?");
+                    } else if (p2[0].trim().isEmpty()) {
+                        throw new MissingElementException("Could you give me task description?");
+                    } else {
+                        return new String[]{"deadline", p2[0].trim(), "", "", p2[1].trim()};
+                    }
+                }
+            }
+            case "event": {
+                if (parts.length == 1) {
+                    throw new MissingElementException("Could you give me the task description, start time and end time?");
+                } else {
+                    String[] p2 = parts[1].split("\\s+/from\\s+", 2);
+                    if (p2.length == 1) {
+                        throw new MissingElementException("Could you give me the start time?");
+                    } else if(p2[0].trim().isEmpty()) {
+                        throw new MissingElementException("Could you give me the task description?");
+                    } else {
+                        String[] p3 = p2[1].trim().split("\\s+/to\\s+", 2);
+                        if (p3.length == 1) {
+                            throw new MissingElementException("Could you give me the end time");
+                        } else if (p3[0].trim().isEmpty()) {
+                            throw new MissingElementException("Oops, the start time is empty QAQ");
+                        } else if (p3[1].trim().isEmpty()) {
+                            throw new MissingElementException("Oops, the end time is empty QAQ");
+                        } else {
+                            return new String[] {"event", p2[0].trim(), "", p3[0].trim(), p3[1].trim()};
+                        }
+                    }
+                }
+            }
+            default: {
+                throw new UnknownCommandException("unknown command");
+            }
+        }
+
     }
 }
