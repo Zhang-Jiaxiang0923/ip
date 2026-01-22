@@ -1,3 +1,5 @@
+import jdk.jfr.Description;
+
 public class Task {
     protected String description;
     protected boolean isDone;
@@ -8,15 +10,16 @@ public class Task {
     }
 
     public String getStatusIcon() {
-        return (isDone ? "[X]" : "[ ]");
+        return (isDone ? "X" : " ");
     }
 
     public String getDescription() {
         return this.description;
     }
 
-    public String getFullDescription() {
-        return this.getStatusIcon() + " " + this.getDescription();
+    @Override
+    public String toString() {
+        return "[" + this.getStatusIcon() + "]" + " " + this.getDescription();
     }
 
     public void markAsDone() {
