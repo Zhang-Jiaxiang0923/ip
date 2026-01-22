@@ -4,10 +4,10 @@ import java.util.Scanner;
 public class Sigma {
     public static void main(String[] args) {
         String logo =
-                " ____   ___    ____   __  __     _    \n"
-                        + "/ ___| |_ _|  / ___| |  \\/  |   / \\   \n"
-                        + "\\___ \\  | |  | |  _  | |\\/| |  / _ \\  \n"
-                        + " ___) | | |  | |_| | | |  | | / ___ \\ \n"
+                " ____   ___    ____   __  __     _\n"
+                        + "/ ___| |_ _|  / ___| |  \\/  |   / \\\n"
+                        + "\\___ \\  | |  | |  _  | |\\/| |  / _ \\\n"
+                        + " ___) | | |  | |_| | | |  | | / ___ \\\n"
                         + "|____/ |___|  \\____| |_|  |_|/_/   \\_\\\n";
         String name = "Sigma";
         int width = 60;
@@ -22,7 +22,7 @@ public class Sigma {
         System.out.println(indentation + "What can I do for you?");
         System.out.println(indentation + "_".repeat(width));
         Loop:
-        while (true) {
+        while (sc.hasNextLine()) {
             String line = sc.nextLine();
             String[] parts = line.trim().split("\\s+", 2);
             String s = parts[0];
