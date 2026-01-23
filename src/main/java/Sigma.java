@@ -15,7 +15,7 @@ public class Sigma {
         Scanner sc = new Scanner(System.in);
         System.out.println("Hello from\n" + logo);
 
-        List<Task> todo = new ArrayList<Task>();
+        List<Task> todo = new ArrayList<>();
 
         System.out.println(indentation + "_".repeat(width));
         System.out.println(indentation + "Hello! I'm " + name);
@@ -32,19 +32,22 @@ public class Sigma {
                     case "bye":
                         break Loop;
                     case "list":
-                        Integer num = 1;
+                        int num = 1;
                         if (todo.isEmpty()) {
                             System.out.println(indentation + "Todo list is empty :)");
                         } else {
                             System.out.println(indentation + "Here are the tasks in your list:");
                             for (Task task : todo) {
-                                System.out.println(indentation + String.valueOf(num) + "." + task);
+                                System.out.println(indentation + num + "." + task);
                                 num++;
                             }
                         }
                         break;
                     case "mark": {
                         int index = Integer.parseInt(arr[2]) - 1;
+                        if (index >= todo.size() || index < 0) {
+                            throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
+                        }
                         Task task = todo.get(index);
                         task.markAsDone();
                         System.out.println(indentation + "Nice! I've marked this task as done:");
@@ -53,6 +56,9 @@ public class Sigma {
                     }
                     case "unmark": {
                         int index = Integer.parseInt(arr[2]) - 1;
+                        if (index >= todo.size() || index < 0) {
+                            throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
+                        }
                         Task task = todo.get(index);
                         task.unmarkDone();
                         System.out.println(indentation + "Ok, I've marked this task as not done yet:");
@@ -85,11 +91,12 @@ public class Sigma {
                     }
                     default:
                 }
-
             } catch (MissingElementException e) {
                 System.out.println(indentation + e.getMessage());
             } catch (UnknownCommandException e) {
                 System.out.println(indentation + "Sorry, I don't know what that means QAQ");
+            } catch (InvalidIndexException e) {
+                System.out.println(indentation + e.getMessage());
             } finally {
                 System.out.println(indentation + "_".repeat(width));
             }
@@ -137,9 +144,9 @@ public class Sigma {
                 if (parts.length == 1) {
                     throw new MissingElementException("Could you give me task description and deadline?");
                 } else {
-                    String[] p2 = parts[1].split("\\s+/by\\s+", 2);
+                    String[] p2 = parts[1].split("(?:^|\\s+)/by\\s+", 2);
                     if (p2.length == 1) {
-                        throw new MissingElementException("Could you give me a deadline?");
+                        throw new MissingElementException("Could you give me the deadline?");
                     } else if (p2[0].trim().isEmpty()) {
                         throw new MissingElementException("Could you give me task description?");
                     } else {
@@ -151,13 +158,13 @@ public class Sigma {
                 if (parts.length == 1) {
                     throw new MissingElementException("Could you give me the task description, start time and end time?");
                 } else {
-                    String[] p2 = parts[1].split("\\s+/from\\s+", 2);
+                    String[] p2 = parts[1].split("(?:^|\\s+)/from\\s+", 2);
                     if (p2.length == 1) {
                         throw new MissingElementException("Could you give me the start time?");
                     } else if(p2[0].trim().isEmpty()) {
                         throw new MissingElementException("Could you give me the task description?");
                     } else {
-                        String[] p3 = p2[1].trim().split("\\s+/to\\s+", 2);
+                        String[] p3 = p2[1].trim().split("(?:^|\\s+)/to\\s+", 2);
                         if (p3.length == 1) {
                             throw new MissingElementException("Could you give me the end time");
                         } else if (p3[0].trim().isEmpty()) {
