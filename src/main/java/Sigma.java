@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 public class Sigma {
     public static void main(String[] args) {
@@ -15,7 +14,7 @@ public class Sigma {
         Scanner sc = new Scanner(System.in);
         System.out.println("Hello from\n" + logo);
 
-        List<Task> todo = new ArrayList<>();
+        ArrayList<Task> todo = new ArrayList<>();
 
         System.out.println(indentation + "_".repeat(width));
         System.out.println(indentation + "Hello! I'm " + name);
@@ -26,12 +25,12 @@ public class Sigma {
             String line = sc.nextLine();
             System.out.println(indentation + "_".repeat(width));
             try {
-                String[] arr = handleCommand(line);
-                String command = arr[0];
+                ParsedInput input = handleCommand(line);
+                CommandType command = input.getCommand();
                 switch (command) {
-                    case "bye":
+                    case BYE:
                         break Loop;
-                    case "list":
+                    case LIST:
                         int num = 1;
                         if (todo.isEmpty()) {
                             System.out.println(indentation + "Todo list is empty :)");
@@ -43,8 +42,8 @@ public class Sigma {
                             }
                         }
                         break;
-                    case "mark": {
-                        int index = Integer.parseInt(arr[2]) - 1;
+                    case MARK: {
+                        int index = input.getIndex();
                         if (index >= todo.size() || index < 0) {
                             throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
                         }
@@ -54,8 +53,8 @@ public class Sigma {
                         System.out.println(indentation + "  " + task);
                         break;
                     }
-                    case "unmark": {
-                        int index = Integer.parseInt(arr[2]) - 1;
+                    case UNMARK: {
+                        int index = input.getIndex();
                         if (index >= todo.size() || index < 0) {
                             throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
                         }
@@ -65,8 +64,8 @@ public class Sigma {
                         System.out.println(indentation + "  " + task);
                         break;
                     }
-                    case "delete": {
-                        int index = Integer.parseInt(arr[2]) - 1;
+                    case DELETE: {
+                        int index = input.getIndex();
                         if (index >= todo.size() || index < 0) {
                             throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
                         }
@@ -79,24 +78,24 @@ public class Sigma {
                         );
                         break;
                     }
-                    case "todo": {
-                        Task task = new ToDos(arr[1]);
+                    case TODO: {
+                        Task task = new ToDos(input.getDescription());
                         todo.add(task);
                         System.out.println(indentation + "Got it. I've added this task:");
                         System.out.println(indentation + "  " + task);
                         System.out.println(indentation + String.format("Now you have %d tasks in the list.", todo.size()));
                         break;
                     }
-                    case "deadline": {
-                        Task task = new Deadlines(arr[1], arr[4]);
+                    case DEADLINE: {
+                        Task task = new Deadlines(input.getDescription(), input.getEnd());
                         todo.add(task);
                         System.out.println(indentation + "Got it. I've added this task:");
                         System.out.println(indentation + "  " + task);
                         System.out.println(indentation + String.format("Now you have %d tasks in the list.", todo.size()));
                         break;
                     }
-                    case "event": {
-                        Task task = new Events(arr[1], arr[3], arr[4]);
+                    case EVENT: {
+                        Task task = new Events(input.getDescription(), input.getStart(), input.getEnd());
                         todo.add(task);
                         System.out.println(indentation + "Got it. I've added this task:");
                         System.out.println(indentation + "  " + task);
@@ -109,8 +108,8 @@ public class Sigma {
                 System.out.println(indentation + e.getMessage());
             } catch (UnknownCommandException e) {
                 System.out.println(indentation + "Sorry, I don't know what that means QAQ");
-            } catch (InvalidIndexException e) {
-                System.out.println(indentation + e.getMessage());
+            } catch (InvalidIndexException | NumberFormatException e) {
+                System.out.println(indentation + "Oops, need a valid number as task index Ծ‸Ծ");
             } finally {
                 System.out.println(indentation + "_".repeat(width));
             }
@@ -120,22 +119,24 @@ public class Sigma {
         System.out.println(indentation + "_".repeat(width));
     }
 
-    public static String[] handleCommand(String line) throws MissingElementException, UnknownCommandException {
+    public static ParsedInput handleCommand(String line) throws MissingElementException, UnknownCommandException, NumberFormatException {
         String[] parts = line.trim().split("\\s+", 2);
         String s = parts[0];
         switch (s) {
             case "bye":{
-                return new String[] {"bye", "", "", "", ""};
+                return new ParsedInput(CommandType.BYE, "", 0, "", "");
+
             }
             case "list": {
-                return new String[]{"list", "", "", "", ""};
+                return new ParsedInput(CommandType.LIST, "", 0, "", "");
             }
             case "mark": {
                 if (parts.length == 1) {
                     throw new MissingElementException("Oops, missing number. Which task do you want to mark?");
                 } else {
                     String taskNum = parts[1];
-                    return new String[]{"mark", "", taskNum, "", ""};
+                    int index = Integer.parseInt(taskNum) - 1;
+                    return new ParsedInput(CommandType.MARK, "", index, "", "");
                 }
             }
             case "unmark": {
@@ -143,7 +144,8 @@ public class Sigma {
                     throw new MissingElementException("Oops, missing number. Which task do you want to unmark?");
                 } else {
                     String taskNum = parts[1];
-                    return new String[] {"unmark", "", taskNum, "", ""};
+                    int index = Integer.parseInt(taskNum) - 1;
+                    return new ParsedInput(CommandType.UNMARK, "", index, "", "");
                 }
             }
             case "delete": {
@@ -151,7 +153,8 @@ public class Sigma {
                     throw new MissingElementException("Oops, missing number. Which task do you want to delete?");
                 } else {
                     String taskNum = parts[1];
-                    return new String[]{"delete", "", taskNum, "", ""};
+                    int index = Integer.parseInt(taskNum) - 1;
+                    return new ParsedInput(CommandType.DELETE, "", index, "", "");
                 }
             }
             case "todo": {
@@ -159,7 +162,7 @@ public class Sigma {
                     throw new MissingElementException("Oops, could you give me the todo description?");
                 } else {
                     String description = parts[1];
-                    return new String[]{"todo", description, "", "", ""};
+                    return new ParsedInput(CommandType.TODO, description, 0, "","");
                 }
             }
             case "deadline": {
@@ -172,13 +175,15 @@ public class Sigma {
                     } else if (p2[0].trim().isEmpty()) {
                         throw new MissingElementException("Could you give me task description?");
                     } else {
-                        return new String[]{"deadline", p2[0].trim(), "", "", p2[1].trim()};
+                        return new ParsedInput(CommandType.DEADLINE, p2[0].trim(), 0, "", p2[1].trim());
                     }
                 }
             }
             case "event": {
                 if (parts.length == 1) {
-                    throw new MissingElementException("Could you give me the task description, start time and end time?");
+                    throw new MissingElementException(
+                            "Could you give me the task description, start time and end time?"
+                    );
                 } else {
                     String[] p2 = parts[1].split("(?:^|\\s+)/from\\s+", 2);
                     if (p2.length == 1) {
@@ -194,7 +199,10 @@ public class Sigma {
                         } else if (p3[1].trim().isEmpty()) {
                             throw new MissingElementException("Oops, the end time is empty QAQ");
                         } else {
-                            return new String[] {"event", p2[0].trim(), "", p3[0].trim(), p3[1].trim()};
+                            return new ParsedInput(
+                                    CommandType.EVENT, p2[0].trim(), 0, p3[0].trim(), p3[1].trim()
+                            );
+
                         }
                     }
                 }
