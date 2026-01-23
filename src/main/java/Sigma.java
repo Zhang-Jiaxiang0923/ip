@@ -65,6 +65,20 @@ public class Sigma {
                         System.out.println(indentation + "  " + task);
                         break;
                     }
+                    case "delete": {
+                        int index = Integer.parseInt(arr[2]) - 1;
+                        if (index >= todo.size() || index < 0) {
+                            throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
+                        }
+                        Task task = todo.get(index);
+                        todo.remove(index);
+                        System.out.println(indentation + "Noted. I've removed this task:");
+                        System.out.println(indentation + "  " + task);
+                        System.out.println(
+                                indentation + String.format("Now you have %d tasks in the list", todo.size())
+                        );
+                        break;
+                    }
                     case "todo": {
                         Task task = new ToDos(arr[1]);
                         todo.add(task);
@@ -130,6 +144,14 @@ public class Sigma {
                 } else {
                     String taskNum = parts[1];
                     return new String[] {"unmark", "", taskNum, "", ""};
+                }
+            }
+            case "delete": {
+                if (parts.length == 1) {
+                    throw new MissingElementException("Oops, missing number. Which task do you want to delete?");
+                } else {
+                    String taskNum = parts[1];
+                    return new String[]{"delete", "", taskNum, "", ""};
                 }
             }
             case "todo": {
