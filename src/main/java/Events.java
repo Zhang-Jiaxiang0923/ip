@@ -12,4 +12,9 @@ public class Events extends Task{
     public String toString(){
         return "[E]" + super.toString() + " (from: " + this.start + " to: " + this.end + ")";
     }
+
+    @Override
+    public String getSymbol() {
+        return "E";
+    }
 }
