@@ -1,6 +1,9 @@
 import java.nio.file.Files;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -121,7 +124,7 @@ public class Sigma {
                         break;
                     }
                     case DEADLINE: {
-                        String end = input.getEnd();
+                        LocalDate end = input.getEnd();
                         String description = input.getDescription();
                         Task task = new Deadlines(description, end);
                         todo.add(task);
@@ -132,8 +135,8 @@ public class Sigma {
                         break;
                     }
                     case EVENT: {
-                        String end = input.getEnd();
-                        String start = input.getStart();
+                        LocalDate end = input.getEnd();
+                        LocalDate start = input.getStart();
                         String description = input.getDescription();
                         Task task = new Events(description, start, end);
                         todo.add(task);
@@ -171,11 +174,11 @@ public class Sigma {
         String s = parts[0];
         switch (s) {
             case "bye":{
-                return new ParsedInput(CommandType.BYE, "", 0, "", "");
+                return new ParsedInput(CommandType.BYE);
 
             }
             case "list": {
-                return new ParsedInput(CommandType.LIST, "", 0, "", "");
+                return new ParsedInput(CommandType.LIST);
             }
             case "mark": {
                 if (parts.length == 1) {
@@ -183,7 +186,7 @@ public class Sigma {
                 } else {
                     String taskNum = parts[1];
                     int index = Integer.parseInt(taskNum) - 1;
-                    return new ParsedInput(CommandType.MARK, "", index, "", "");
+                    return new ParsedInput(CommandType.MARK, index);
                 }
             }
             case "unmark": {
@@ -192,7 +195,7 @@ public class Sigma {
                 } else {
                     String taskNum = parts[1];
                     int index = Integer.parseInt(taskNum) - 1;
-                    return new ParsedInput(CommandType.UNMARK, "", index, "", "");
+                    return new ParsedInput(CommandType.UNMARK, index);
                 }
             }
             case "delete": {
@@ -201,7 +204,7 @@ public class Sigma {
                 } else {
                     String taskNum = parts[1];
                     int index = Integer.parseInt(taskNum) - 1;
-                    return new ParsedInput(CommandType.DELETE, "", index, "", "");
+                    return new ParsedInput(CommandType.DELETE, index);
                 }
             }
             case "todo": {
@@ -209,7 +212,7 @@ public class Sigma {
                     throw new MissingElementException("Oops, could you give me the todo description?");
                 } else {
                     String description = parts[1];
-                    return new ParsedInput(CommandType.TODO, description, 0, "","");
+                    return new ParsedInput(CommandType.TODO, description);
                 }
             }
             case "deadline": {
@@ -222,7 +225,7 @@ public class Sigma {
                     } else if (p2[0].trim().isEmpty()) {
                         throw new MissingElementException("Could you give me task description?");
                     } else {
-                        return new ParsedInput(CommandType.DEADLINE, p2[0].trim(), 0, "", p2[1].trim());
+                        return new ParsedInput(CommandType.DEADLINE, p2[0].trim(), p2[1].trim());
                     }
                 }
             }
@@ -247,7 +250,7 @@ public class Sigma {
                             throw new MissingElementException("Oops, the end time is empty QAQ");
                         } else {
                             return new ParsedInput(
-                                    CommandType.EVENT, p2[0].trim(), 0, p3[0].trim(), p3[1].trim()
+                                    CommandType.EVENT, p2[0].trim(), p3[0].trim(), p3[1].trim()
                             );
 
                         }
@@ -277,7 +280,7 @@ public class Sigma {
                     break;
                 }
                 case "D": {
-                    Task task = new Deadlines(p[2].trim(), p[4].trim());
+                    Task task = new Deadlines(p[2].trim(), LocalDate.parse(p[4].trim()));
                     if (p[1].equals("1")) {
                         task.markAsDone();
                     }
@@ -285,7 +288,7 @@ public class Sigma {
                     break;
                 }
                 case "E": {
-                    Task task = new Events(p[2].trim(), p[3].trim(), p[4].trim());
+                    Task task = new Events(p[2].trim(), LocalDate.parse(p[3].trim()), LocalDate.parse(p[4].trim()));
                     if (p[1].equals("1")) {
                         task.markAsDone();
                     }
