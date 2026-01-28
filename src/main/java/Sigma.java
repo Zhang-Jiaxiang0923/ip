@@ -1,14 +1,10 @@
 import java.nio.file.Files;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Scanner;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
 public class Sigma {
@@ -175,7 +171,6 @@ public class Sigma {
         switch (s) {
             case "bye":{
                 return new ParsedInput(CommandType.BYE);
-
             }
             case "list": {
                 return new ParsedInput(CommandType.LIST);
