@@ -1,5 +1,13 @@
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class Sigma {
     public static void main(String[] args) {
         String logo =
@@ -12,10 +20,29 @@ public class Sigma {
         int width = 60;
         String indentation = "    ";
         Scanner sc = new Scanner(System.in);
-        System.out.println("Hello from\n" + logo);
-
         ArrayList<Task> todo = new ArrayList<>();
+        Path target = Paths.get(System.getProperty("user.dir"))
+                           .resolve(Paths.get("data", "Sigma.txt"));
+        List<String> lines = new ArrayList<>();
+        try {
+            if (Files.notExists(target)) {
+                Files.createDirectories(target.getParent());
+                Files.createFile(target);
+            } else {
+                try {
+                    lines = Files.readAllLines(target);
+                    ReadFromDisk(todo, lines);
+                } catch (CorruptedFileException e) {
+                    Files.deleteIfExists(target);
+                    Files.createDirectories(target.getParent());
+                    Files.createFile(target);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("File does not exist and cannot create file: " + target, e);
+        }
 
+        System.out.println("Hello from\n" + logo);
         System.out.println(indentation + "_".repeat(width));
         System.out.println(indentation + "Hello! I'm " + name);
         System.out.println(indentation + "What can I do for you?");
@@ -49,6 +76,8 @@ public class Sigma {
                         }
                         Task task = todo.get(index);
                         task.markAsDone();
+                        String content = lines.get(index);
+                        lines.set(index, setDoneFlag(content));
                         System.out.println(indentation + "Nice! I've marked this task as done:");
                         System.out.println(indentation + "  " + task);
                         break;
@@ -60,6 +89,8 @@ public class Sigma {
                         }
                         Task task = todo.get(index);
                         task.unmarkDone();
+                        String content = lines.get(index);
+                        lines.set(index, resetDoneFlag(content));
                         System.out.println(indentation + "Ok, I've marked this task as not done yet:");
                         System.out.println(indentation + "  " + task);
                         break;
@@ -71,6 +102,7 @@ public class Sigma {
                         }
                         Task task = todo.get(index);
                         todo.remove(index);
+                        lines.remove(index);
                         System.out.println(indentation + "Noted. I've removed this task:");
                         System.out.println(indentation + "  " + task);
                         System.out.println(
@@ -79,24 +111,33 @@ public class Sigma {
                         break;
                     }
                     case TODO: {
-                        Task task = new ToDos(input.getDescription());
+                        String description = input.getDescription();
+                        Task task = new ToDos(description);
                         todo.add(task);
+                        lines.add("T | 0 | " + description + " | - | -");
                         System.out.println(indentation + "Got it. I've added this task:");
                         System.out.println(indentation + "  " + task);
                         System.out.println(indentation + String.format("Now you have %d tasks in the list.", todo.size()));
                         break;
                     }
                     case DEADLINE: {
-                        Task task = new Deadlines(input.getDescription(), input.getEnd());
+                        String end = input.getEnd();
+                        String description = input.getDescription();
+                        Task task = new Deadlines(description, end);
                         todo.add(task);
+                        lines.add("D | 0 | " + task.getDescription() + " | - | " + end);
                         System.out.println(indentation + "Got it. I've added this task:");
                         System.out.println(indentation + "  " + task);
                         System.out.println(indentation + String.format("Now you have %d tasks in the list.", todo.size()));
                         break;
                     }
                     case EVENT: {
-                        Task task = new Events(input.getDescription(), input.getStart(), input.getEnd());
+                        String end = input.getEnd();
+                        String start = input.getStart();
+                        String description = input.getDescription();
+                        Task task = new Events(description, start, end);
                         todo.add(task);
+                        lines.add("E | 0 | " + description + " | " + start + " | " + end);
                         System.out.println(indentation + "Got it. I've added this task:");
                         System.out.println(indentation + "  " + task);
                         System.out.println(indentation + String.format("Now you have %d tasks in the list.", todo.size()));
@@ -104,6 +145,12 @@ public class Sigma {
                     }
                     default:
                 }
+                try {
+                    Files.write(target, lines);
+                } catch (IOException e) {
+                    throw new RuntimeException("Failed to write in the file.");
+                }
+
             } catch (MissingElementException e) {
                 System.out.println(indentation + e.getMessage());
             } catch (UnknownCommandException e) {
@@ -213,4 +260,52 @@ public class Sigma {
         }
 
     }
+
+    public static void ReadFromDisk(ArrayList<Task> todo, List<String> lines) throws CorruptedFileException{
+        for (String line: lines) {
+            String[] p = line.split("\\|", -1);
+            if (p.length != 5) {
+                throw new CorruptedFileException("Files are corrupted");
+            }
+            switch (p[0].trim()) {
+                case "T": {
+                    Task task = new ToDos(p[2].trim());
+                    if (p[1].equals("1")) {
+                        task.markAsDone();
+                    }
+                    todo.add(task);
+                    break;
+                }
+                case "D": {
+                    Task task = new Deadlines(p[2].trim(), p[4].trim());
+                    if (p[1].equals("1")) {
+                        task.markAsDone();
+                    }
+                    todo.add(task);
+                    break;
+                }
+                case "E": {
+                    Task task = new Events(p[2].trim(), p[3].trim(), p[4].trim());
+                    if (p[1].equals("1")) {
+                        task.markAsDone();
+                    }
+                    todo.add(task);
+                    break;
+                }
+            }
+        }
+    }
+
+    public static String setDoneFlag(String line) {
+        String[] p = line.split("\\|", -1);
+        p[1] = " 1 ";
+        return String.join("|", p);
+    }
+
+    public static String resetDoneFlag(String line) {
+        String[] p = line.split("\\|", -1);
+        p[1] = " 0 ";
+        return String.join("|", p);
+    }
+
 }
