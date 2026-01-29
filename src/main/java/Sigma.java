@@ -1,43 +1,20 @@
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.io.IOException;
 
 public class Sigma {
     private final Ui ui;
-
-    public Sigma() {
+    private final Storage storage;
+    public Sigma(Path target) {
         ui = new Ui();
+        this.storage = new Storage(target);
     }
 
     public void run() {
         Scanner sc = new Scanner(System.in);
-        ArrayList<Task> todo = new ArrayList<>();
-        Path target = Paths.get(System.getProperty("user.dir"))
-                .resolve(Paths.get("data", "Sigma.txt"));
-        List<String> lines = new ArrayList<>();
-        try {
-            if (Files.notExists(target)) {
-                Files.createDirectories(target.getParent());
-                Files.createFile(target);
-            } else {
-                try {
-                    lines = Files.readAllLines(target);
-                    ReadFromDisk(todo, lines);
-                } catch (CorruptedFileException e) {
-                    Files.deleteIfExists(target);
-                    Files.createDirectories(target.getParent());
-                    Files.createFile(target);
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("File does not exist and cannot create file: " + target, e);
-        }
-
+        ArrayList<Task> todo = this.storage.load();
         this.ui.showWelcome();
         Loop:
         while (sc.hasNextLine()) {
@@ -60,8 +37,7 @@ public class Sigma {
                         }
                         Task task = todo.get(index);
                         task.markAsDone();
-                        String content = lines.get(index);
-                        lines.set(index, setDoneFlag(content));
+                        this.storage.writeMark(index);
                         this.ui.printMessage("Nice! I've marked this task as done:");
                         this.ui.printMessage("  " + task);
                         break;
@@ -73,8 +49,7 @@ public class Sigma {
                         }
                         Task task = todo.get(index);
                         task.unmarkDone();
-                        String content = lines.get(index);
-                        lines.set(index, resetDoneFlag(content));
+                        this.storage.writeUnmark(index);
                         this.ui.printMessage("Ok, I've marked this task as not done yet:");
                         this.ui.printMessage("  " + task);
                         break;
@@ -86,7 +61,7 @@ public class Sigma {
                         }
                         Task task = todo.get(index);
                         todo.remove(index);
-                        lines.remove(index);
+                        this.storage.writeDelete(index);
                         this.ui.printMessage("Noted. I've removed this task:");
                         this.ui.printMessage("  " + task);
                         this.ui.printMessage(String.format("Now you have %d tasks in the list", todo.size()));
@@ -96,7 +71,7 @@ public class Sigma {
                         String description = input.getDescription();
                         Task task = new ToDos(description);
                         todo.add(task);
-                        lines.add("T | 0 | " + description + " | - | -");
+                        this.storage.writeTodo(description);
                         this.ui.printMessage("Got it. I've added this task:");
                         this.ui.printMessage("  " + task);
                         this.ui.printMessage(String.format("Now you have %d tasks in the list.", todo.size()));
@@ -107,7 +82,7 @@ public class Sigma {
                         String description = input.getDescription();
                         Task task = new Deadlines(description, end);
                         todo.add(task);
-                        lines.add("D | 0 | " + task.getDescription() + " | - | " + end);
+                        this.storage.writeDeadline(description, end);
                         this.ui.printMessage("Got it. I've added this task:");
                         this.ui.printMessage("  " + task);
                         this.ui.printMessage(String.format("Now you have %d tasks in the list.", todo.size()));
@@ -119,18 +94,13 @@ public class Sigma {
                         String description = input.getDescription();
                         Task task = new Events(description, start, end);
                         todo.add(task);
-                        lines.add("E | 0 | " + description + " | " + start + " | " + end);
+                        this.storage.writeEvent(description, start, end);
                         this.ui.printMessage("Got it. I've added this task:");
                         this.ui.printMessage("  " + task);
                         this.ui.printMessage(String.format("Now you have %d tasks in the list.", todo.size()));
                         break;
                     }
                     default:
-                }
-                try {
-                    Files.write(target, lines);
-                } catch (IOException e) {
-                    throw new RuntimeException("Failed to write in the file.");
                 }
 
             } catch (MissingElementException e) {
@@ -147,7 +117,9 @@ public class Sigma {
     }
 
     public static void main(String[] args) {
-            new Sigma().run();
+        Path target = Paths.get(System.getProperty("user.dir"))
+                .resolve(Paths.get("data", "Sigma.txt"));
+        new Sigma(target).run();
     }
 
     public static ParsedInput handleCommand(String line) throws MissingElementException, UnknownCommandException, NumberFormatException {
@@ -243,52 +215,5 @@ public class Sigma {
         }
 
     }
-
-//    public static void ReadFromDisk(ArrayList<Task> todo, List<String> lines) throws CorruptedFileException{
-//        for (String line: lines) {
-//            String[] p = line.split("\\|", -1);
-//            if (p.length != 5) {
-//                throw new CorruptedFileException("Files are corrupted");
-//            }
-//            switch (p[0].trim()) {
-//                case "T": {
-//                    Task task = new ToDos(p[2].trim());
-//                    if (p[1].equals("1")) {
-//                        task.markAsDone();
-//                    }
-//                    todo.add(task);
-//                    break;
-//                }
-//                case "D": {
-//                    Task task = new Deadlines(p[2].trim(), LocalDate.parse(p[4].trim()));
-//                    if (p[1].equals("1")) {
-//                        task.markAsDone();
-//                    }
-//                    todo.add(task);
-//                    break;
-//                }
-//                case "E": {
-//                    Task task = new Events(p[2].trim(), LocalDate.parse(p[3].trim()), LocalDate.parse(p[4].trim()));
-//                    if (p[1].equals("1")) {
-//                        task.markAsDone();
-//                    }
-//                    todo.add(task);
-//                    break;
-//                }
-//            }
-//        }
-//    }
-
-    public static String setDoneFlag(String line) {
-        String[] p = line.split("\\|", -1);
-        p[1] = " 1 ";
-        return String.join("|", p);
-    }
-
-    public static String resetDoneFlag(String line) {
-        String[] p = line.split("\\|", -1);
-        p[1] = " 0 ";
-        return String.join("|", p);
-    }
-
+    
 }

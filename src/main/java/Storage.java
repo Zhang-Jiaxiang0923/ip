@@ -34,7 +34,7 @@ public class Storage {
         }
     }
 
-    public ArrayList<Task> ReadFromDisk() throws CorruptedFileException{
+    private ArrayList<Task> ReadFromDisk() throws CorruptedFileException{
         ArrayList<Task> todo = new ArrayList<>();
         for (String line: this.lines) {
             String[] p = line.split("\\|", -1);
@@ -70,4 +70,65 @@ public class Storage {
         }
         return todo;
     }
+
+    public void writeMark(int index) {
+        try {
+            String content = lines.get(index);
+            String[] p = content.split("\\|", -1);
+            p[1] = " 1 ";
+            lines.set(index, String.join("|", p));
+            Files.write(target, lines);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write in the file.");
+        }
+    }
+
+    public void writeUnmark(int index) {
+        try {
+            String content = lines.get(index);
+            String[] p = content.split("\\|", -1);
+            p[1] = " 0 ";
+            lines.set(index, String.join("|", p));
+            Files.write(target, lines);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write in the file.");
+        }
+    }
+
+    public void writeDelete(int index) {
+        try {
+            lines.remove(index);
+            Files.write(target, lines);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write in the file.");
+        }
+    }
+
+    public void writeTodo(String description) {
+        try {
+            lines.add("T | 0 | " + description + " | - | -");
+            Files.write(target, lines);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write in the file.");
+        }
+    }
+
+    public void writeDeadline(String description, LocalDate end) {
+        try {
+            lines.add("D | 0 | " + description + " | - | " + end);
+            Files.write(target, lines);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write in the file.");
+        }
+    }
+
+    public void writeEvent(String description, LocalDate start, LocalDate end) {
+        try {
+            lines.add("E | 0 | " + description + " | " + start + " | " + end);
+            Files.write(target, lines);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write in the file.");
+        }
+    }
+
 }
