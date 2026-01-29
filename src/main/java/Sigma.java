@@ -244,40 +244,40 @@ public class Sigma {
 
     }
 
-    public static void ReadFromDisk(ArrayList<Task> todo, List<String> lines) throws CorruptedFileException{
-        for (String line: lines) {
-            String[] p = line.split("\\|", -1);
-            if (p.length != 5) {
-                throw new CorruptedFileException("Files are corrupted");
-            }
-            switch (p[0].trim()) {
-                case "T": {
-                    Task task = new ToDos(p[2].trim());
-                    if (p[1].equals("1")) {
-                        task.markAsDone();
-                    }
-                    todo.add(task);
-                    break;
-                }
-                case "D": {
-                    Task task = new Deadlines(p[2].trim(), LocalDate.parse(p[4].trim()));
-                    if (p[1].equals("1")) {
-                        task.markAsDone();
-                    }
-                    todo.add(task);
-                    break;
-                }
-                case "E": {
-                    Task task = new Events(p[2].trim(), LocalDate.parse(p[3].trim()), LocalDate.parse(p[4].trim()));
-                    if (p[1].equals("1")) {
-                        task.markAsDone();
-                    }
-                    todo.add(task);
-                    break;
-                }
-            }
-        }
-    }
+//    public static void ReadFromDisk(ArrayList<Task> todo, List<String> lines) throws CorruptedFileException{
+//        for (String line: lines) {
+//            String[] p = line.split("\\|", -1);
+//            if (p.length != 5) {
+//                throw new CorruptedFileException("Files are corrupted");
+//            }
+//            switch (p[0].trim()) {
+//                case "T": {
+//                    Task task = new ToDos(p[2].trim());
+//                    if (p[1].equals("1")) {
+//                        task.markAsDone();
+//                    }
+//                    todo.add(task);
+//                    break;
+//                }
+//                case "D": {
+//                    Task task = new Deadlines(p[2].trim(), LocalDate.parse(p[4].trim()));
+//                    if (p[1].equals("1")) {
+//                        task.markAsDone();
+//                    }
+//                    todo.add(task);
+//                    break;
+//                }
+//                case "E": {
+//                    Task task = new Events(p[2].trim(), LocalDate.parse(p[3].trim()), LocalDate.parse(p[4].trim()));
+//                    if (p[1].equals("1")) {
+//                        task.markAsDone();
+//                    }
+//                    todo.add(task);
+//                    break;
+//                }
+//            }
+//        }
+//    }
 
     public static String setDoneFlag(String line) {
         String[] p = line.split("\\|", -1);
