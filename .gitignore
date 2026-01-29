@@ -19,3 +19,10 @@ text-ui-test/EXPECTED-UNIX.TXT
 # data/..
 /data
 
+# gradle stuff
+.gradle/
+build/
+out/
+gradle/caches/
+gradle/wrapper/dists/
+gradle/daemon/
