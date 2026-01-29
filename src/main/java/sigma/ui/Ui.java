@@ -1,5 +1,9 @@
+package sigma.ui;
+
 import java.util.ArrayList;
 import java.util.Scanner;
+import sigma.task.TaskList;
+
 public class Ui {
     private static final String LOGO =
             " ____   ___    ____   __  __     _\n"

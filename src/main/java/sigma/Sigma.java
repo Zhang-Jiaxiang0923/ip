@@ -1,7 +1,24 @@
+package sigma;
+
 import java.time.LocalDate;
 import java.util.Scanner;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import sigma.exception.InvalidIndexException;
+import sigma.exception.MissingElementException;
+import sigma.exception.UnknownCommandException;
+import sigma.storage.Storage;
+import sigma.task.ToDos;
+import sigma.task.TaskList;
+import sigma.task.Task;
+import sigma.task.Events;
+import sigma.task.Deadlines;
+import sigma.ui.Ui;
+import sigma.parser.ParsedInput;
+import sigma.parser.Parser;
+import sigma.command.CommandType;
+
 
 public class Sigma {
     private final Ui ui;

@@ -1,9 +1,17 @@
+package sigma.storage;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import sigma.exception.CorruptedFileException;
+import sigma.task.ToDos;
+import sigma.task.TaskList;
+import sigma.task.Task;
+import sigma.task.Events;
+import sigma.task.Deadlines;
 
 public class Storage {
     private final Path target;

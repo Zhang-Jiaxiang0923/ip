@@ -1,5 +1,9 @@
+package sigma.parser;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import sigma.command.CommandType;
+
 public class ParsedInput {
     protected CommandType command;
     protected String description;

@@ -1,3 +1,9 @@
+package sigma.parser;
+
+import sigma.command.CommandType;
+import sigma.exception.MissingElementException;
+import sigma.exception.UnknownCommandException;
+
 public class Parser {
     private Parser() {
 
