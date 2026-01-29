@@ -9,24 +9,23 @@ public class Storage {
     private final Path target;
     private List<String> lines;
     public Storage(Path target) {
+        this.lines = new ArrayList<>();
         this.target = target;
     }
 
-    public ArrayList<Task> load() {
+    public void load(TaskList taskList) {
         try {
             if (Files.notExists(target)) {
                 Files.createDirectories(target.getParent());
                 Files.createFile(target);
-                return new ArrayList<>();
             } else {
                 try {
                     this.lines = Files.readAllLines(this.target);
-                    return ReadFromDisk();
+                    ReadFromDisk(taskList);
                 } catch (CorruptedFileException e) {
                     Files.deleteIfExists(target);
                     Files.createDirectories(target.getParent());
                     Files.createFile(target);
-                    return new ArrayList<>();
                 }
             }
         } catch (IOException e) {
@@ -34,8 +33,7 @@ public class Storage {
         }
     }
 
-    private ArrayList<Task> ReadFromDisk() throws CorruptedFileException{
-        ArrayList<Task> todo = new ArrayList<>();
+    private void ReadFromDisk(TaskList taskList) throws CorruptedFileException{
         for (String line: this.lines) {
             String[] p = line.split("\\|", -1);
             if (p.length != 5) {
@@ -47,7 +45,7 @@ public class Storage {
                     if (p[1].equals("1")) {
                         task.markAsDone();
                     }
-                    todo.add(task);
+                    taskList.addTask(task);
                     break;
                 }
                 case "D": {
@@ -55,7 +53,7 @@ public class Storage {
                     if (p[1].equals("1")) {
                         task.markAsDone();
                     }
-                    todo.add(task);
+                    taskList.addTask(task);
                     break;
                 }
                 case "E": {
@@ -63,12 +61,11 @@ public class Storage {
                     if (p[1].equals("1")) {
                         task.markAsDone();
                     }
-                    todo.add(task);
+                    taskList.addTask(task);
                     break;
                 }
             }
         }
-        return todo;
     }
 
     public void writeMark(int index) {
