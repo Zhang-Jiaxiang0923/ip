@@ -9,15 +9,8 @@ import java.io.IOException;
 
 public class Sigma {
     public static void main(String[] args) {
-        String logo =
-                " ____   ___    ____   __  __     _\n"
-                        + "/ ___| |_ _|  / ___| |  \\/  |   / \\\n"
-                        + "\\___ \\  | |  | |  _  | |\\/| |  / _ \\\n"
-                        + " ___) | | |  | |_| | | |  | | / ___ \\\n"
-                        + "|____/ |___|  \\____| |_|  |_|/_/   \\_\\\n";
-        String name = "Sigma";
-        int width = 60;
         String indentation = "    ";
+        int width = 60;
         Scanner sc = new Scanner(System.in);
         ArrayList<Task> todo = new ArrayList<>();
         Path target = Paths.get(System.getProperty("user.dir"))
@@ -41,32 +34,20 @@ public class Sigma {
             throw new RuntimeException("File does not exist and cannot create file: " + target, e);
         }
 
-        System.out.println("Hello from\n" + logo);
-        System.out.println(indentation + "_".repeat(width));
-        System.out.println(indentation + "Hello! I'm " + name);
-        System.out.println(indentation + "What can I do for you?");
-        System.out.println(indentation + "_".repeat(width));
+        Ui.showWelcome();
         Loop:
         while (sc.hasNextLine()) {
             String line = sc.nextLine();
-            System.out.println(indentation + "_".repeat(width));
+            Ui.showDivisionLine();
             try {
                 ParsedInput input = handleCommand(line);
                 CommandType command = input.getCommand();
                 switch (command) {
                     case BYE:
+                        Ui.showGoodbye();
                         break Loop;
                     case LIST:
-                        int num = 1;
-                        if (todo.isEmpty()) {
-                            System.out.println(indentation + "Todo list is empty :)");
-                        } else {
-                            System.out.println(indentation + "Here are the tasks in your list:");
-                            for (Task task : todo) {
-                                System.out.println(indentation + num + "." + task);
-                                num++;
-                            }
-                        }
+                        Ui.printTasks(todo);
                         break;
                     case MARK: {
                         int index = input.getIndex();
@@ -77,8 +58,8 @@ public class Sigma {
                         task.markAsDone();
                         String content = lines.get(index);
                         lines.set(index, setDoneFlag(content));
-                        System.out.println(indentation + "Nice! I've marked this task as done:");
-                        System.out.println(indentation + "  " + task);
+                        Ui.printMessage("Nice! I've marked this task as done:");
+                        Ui.printMessage("  " + task);
                         break;
                     }
                     case UNMARK: {
@@ -90,8 +71,8 @@ public class Sigma {
                         task.unmarkDone();
                         String content = lines.get(index);
                         lines.set(index, resetDoneFlag(content));
-                        System.out.println(indentation + "Ok, I've marked this task as not done yet:");
-                        System.out.println(indentation + "  " + task);
+                        Ui.printMessage("Ok, I've marked this task as not done yet:");
+                        Ui.printMessage("  " + task);
                         break;
                     }
                     case DELETE: {
@@ -102,11 +83,9 @@ public class Sigma {
                         Task task = todo.get(index);
                         todo.remove(index);
                         lines.remove(index);
-                        System.out.println(indentation + "Noted. I've removed this task:");
-                        System.out.println(indentation + "  " + task);
-                        System.out.println(
-                                indentation + String.format("Now you have %d tasks in the list", todo.size())
-                        );
+                        Ui.printMessage("Noted. I've removed this task:");
+                        Ui.printMessage("  " + task);
+                        Ui.printMessage(String.format("Now you have %d tasks in the list", todo.size()));
                         break;
                     }
                     case TODO: {
@@ -114,9 +93,9 @@ public class Sigma {
                         Task task = new ToDos(description);
                         todo.add(task);
                         lines.add("T | 0 | " + description + " | - | -");
-                        System.out.println(indentation + "Got it. I've added this task:");
-                        System.out.println(indentation + "  " + task);
-                        System.out.println(indentation + String.format("Now you have %d tasks in the list.", todo.size()));
+                        Ui.printMessage("Got it. I've added this task:");
+                        Ui.printMessage("  " + task);
+                        Ui.printMessage(String.format("Now you have %d tasks in the list.", todo.size()));
                         break;
                     }
                     case DEADLINE: {
@@ -125,9 +104,9 @@ public class Sigma {
                         Task task = new Deadlines(description, end);
                         todo.add(task);
                         lines.add("D | 0 | " + task.getDescription() + " | - | " + end);
-                        System.out.println(indentation + "Got it. I've added this task:");
-                        System.out.println(indentation + "  " + task);
-                        System.out.println(indentation + String.format("Now you have %d tasks in the list.", todo.size()));
+                        Ui.printMessage("Got it. I've added this task:");
+                        Ui.printMessage("  " + task);
+                        Ui.printMessage(String.format("Now you have %d tasks in the list.", todo.size()));
                         break;
                     }
                     case EVENT: {
@@ -137,9 +116,9 @@ public class Sigma {
                         Task task = new Events(description, start, end);
                         todo.add(task);
                         lines.add("E | 0 | " + description + " | " + start + " | " + end);
-                        System.out.println(indentation + "Got it. I've added this task:");
-                        System.out.println(indentation + "  " + task);
-                        System.out.println(indentation + String.format("Now you have %d tasks in the list.", todo.size()));
+                        Ui.printMessage("Got it. I've added this task:");
+                        Ui.printMessage("  " + task);
+                        Ui.printMessage(String.format("Now you have %d tasks in the list.", todo.size()));
                         break;
                     }
                     default:
@@ -151,18 +130,16 @@ public class Sigma {
                 }
 
             } catch (MissingElementException e) {
-                System.out.println(indentation + e.getMessage());
+                Ui.printMessage(e.getMessage());
             } catch (UnknownCommandException e) {
-                System.out.println(indentation + "Sorry, I don't know what that means QAQ");
+                Ui.printMessage("Sorry, I don't know what that means QAQ");
             } catch (InvalidIndexException | NumberFormatException e) {
-                System.out.println(indentation + "Oops, need a valid number as task index Ծ‸Ծ");
+                Ui.printMessage("Oops, need a valid number as task index Ծ‸Ծ");
             } finally {
-                System.out.println(indentation + "_".repeat(width));
+                Ui.showDivisionLine();
             }
 
         }
-        System.out.println(indentation + "Bye. Hope to see you again soon!");
-        System.out.println(indentation + "_".repeat(width));
     }
 
     public static ParsedInput handleCommand(String line) throws MissingElementException, UnknownCommandException, NumberFormatException {
