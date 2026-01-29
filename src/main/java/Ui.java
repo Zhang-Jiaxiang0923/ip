@@ -34,15 +34,13 @@ public class Ui {
         printMessage("Bye. Hope to see you again soon!");
     }
 
-    public void printTasks(ArrayList<Task> todo) {
-        int num = 1;
-        if (todo.isEmpty()) {
+    public void printTasks(TaskList taskList) {
+        if (taskList.isEmpty()) {
             printMessage("Todo list is empty :)");
         } else {
             printMessage("Here are the tasks in your list:");
-            for (Task task : todo) {
-                printMessage(num + "." + task);
-                num++;
+            for (int i = 1; i <= taskList.getLength(); i++) {
+                printMessage(i + "." + taskList.getTask(i-1));
             }
         }
     }

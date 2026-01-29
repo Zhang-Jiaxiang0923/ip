@@ -1,5 +1,4 @@
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -7,14 +6,17 @@ import java.nio.file.Paths;
 public class Sigma {
     private final Ui ui;
     private final Storage storage;
+    private final TaskList taskList;
+
     public Sigma(Path target) {
         ui = new Ui();
         this.storage = new Storage(target);
+        this.taskList = new TaskList();
     }
 
     public void run() {
         Scanner sc = new Scanner(System.in);
-        ArrayList<Task> todo = this.storage.load();
+        this.storage.load(this.taskList);
         this.ui.showWelcome();
         Loop:
         while (sc.hasNextLine()) {
@@ -28,64 +30,61 @@ public class Sigma {
                         this.ui.showGoodbye();
                         break Loop;
                     case LIST:
-                        this.ui.printTasks(todo);
+                        this.ui.printTasks(this.taskList);
                         break;
                     case MARK: {
                         int index = input.getIndex();
-                        if (index >= todo.size() || index < 0) {
+                        if (index >= taskList.getLength() || index < 0) {
                             throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
                         }
-                        Task task = todo.get(index);
-                        task.markAsDone();
+                        taskList.markTask(index);
                         this.storage.writeMark(index);
                         this.ui.printMessage("Nice! I've marked this task as done:");
-                        this.ui.printMessage("  " + task);
+                        this.ui.printMessage("  " + taskList.getTask(index));
                         break;
                     }
                     case UNMARK: {
                         int index = input.getIndex();
-                        if (index >= todo.size() || index < 0) {
+                        if (index >= taskList.getLength() || index < 0) {
                             throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
                         }
-                        Task task = todo.get(index);
-                        task.unmarkDone();
+                        taskList.unmarkTask(index);
                         this.storage.writeUnmark(index);
                         this.ui.printMessage("Ok, I've marked this task as not done yet:");
-                        this.ui.printMessage("  " + task);
+                        this.ui.printMessage("  " + taskList.getTask(index));
                         break;
                     }
                     case DELETE: {
                         int index = input.getIndex();
-                        if (index >= todo.size() || index < 0) {
+                        if (index >= taskList.getLength() || index < 0) {
                             throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
                         }
-                        Task task = todo.get(index);
-                        todo.remove(index);
+                        this.taskList.deleteTask(index);
                         this.storage.writeDelete(index);
                         this.ui.printMessage("Noted. I've removed this task:");
-                        this.ui.printMessage("  " + task);
-                        this.ui.printMessage(String.format("Now you have %d tasks in the list", todo.size()));
+                        this.ui.printMessage("  " + taskList.getTask(index));
+                        this.ui.printMessage(String.format("Now you have %d tasks in the list", taskList.getLength()));
                         break;
                     }
                     case TODO: {
                         String description = input.getDescription();
                         Task task = new ToDos(description);
-                        todo.add(task);
+                        this.taskList.addTask(task);
                         this.storage.writeTodo(description);
                         this.ui.printMessage("Got it. I've added this task:");
                         this.ui.printMessage("  " + task);
-                        this.ui.printMessage(String.format("Now you have %d tasks in the list.", todo.size()));
+                        this.ui.printMessage(String.format("Now you have %d tasks in the list.", taskList.getLength()));
                         break;
                     }
                     case DEADLINE: {
                         LocalDate end = input.getEnd();
                         String description = input.getDescription();
                         Task task = new Deadlines(description, end);
-                        todo.add(task);
+                        taskList.addTask(task);
                         this.storage.writeDeadline(description, end);
                         this.ui.printMessage("Got it. I've added this task:");
                         this.ui.printMessage("  " + task);
-                        this.ui.printMessage(String.format("Now you have %d tasks in the list.", todo.size()));
+                        this.ui.printMessage(String.format("Now you have %d tasks in the list.", taskList.getLength()));
                         break;
                     }
                     case EVENT: {
@@ -93,11 +92,11 @@ public class Sigma {
                         LocalDate start = input.getStart();
                         String description = input.getDescription();
                         Task task = new Events(description, start, end);
-                        todo.add(task);
+                        this.taskList.addTask(task);
                         this.storage.writeEvent(description, start, end);
                         this.ui.printMessage("Got it. I've added this task:");
                         this.ui.printMessage("  " + task);
-                        this.ui.printMessage(String.format("Now you have %d tasks in the list.", todo.size()));
+                        this.ui.printMessage(String.format("Now you have %d tasks in the list.", taskList.getLength()));
                         break;
                     }
                     default:
@@ -215,5 +214,5 @@ public class Sigma {
         }
 
     }
-    
+
 }
