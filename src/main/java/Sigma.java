@@ -8,13 +8,17 @@ import java.nio.file.Paths;
 import java.io.IOException;
 
 public class Sigma {
-    public static void main(String[] args) {
-        String indentation = "    ";
-        int width = 60;
+    private final Ui ui;
+
+    public Sigma() {
+        ui = new Ui();
+    }
+
+    public void run() {
         Scanner sc = new Scanner(System.in);
         ArrayList<Task> todo = new ArrayList<>();
         Path target = Paths.get(System.getProperty("user.dir"))
-                           .resolve(Paths.get("data", "Sigma.txt"));
+                .resolve(Paths.get("data", "Sigma.txt"));
         List<String> lines = new ArrayList<>();
         try {
             if (Files.notExists(target)) {
@@ -34,20 +38,20 @@ public class Sigma {
             throw new RuntimeException("File does not exist and cannot create file: " + target, e);
         }
 
-        Ui.showWelcome();
+        this.ui.showWelcome();
         Loop:
         while (sc.hasNextLine()) {
             String line = sc.nextLine();
-            Ui.showDivisionLine();
+            this.ui.showDivisionLine();
             try {
                 ParsedInput input = handleCommand(line);
                 CommandType command = input.getCommand();
                 switch (command) {
                     case BYE:
-                        Ui.showGoodbye();
+                        this.ui.showGoodbye();
                         break Loop;
                     case LIST:
-                        Ui.printTasks(todo);
+                        this.ui.printTasks(todo);
                         break;
                     case MARK: {
                         int index = input.getIndex();
@@ -58,8 +62,8 @@ public class Sigma {
                         task.markAsDone();
                         String content = lines.get(index);
                         lines.set(index, setDoneFlag(content));
-                        Ui.printMessage("Nice! I've marked this task as done:");
-                        Ui.printMessage("  " + task);
+                        this.ui.printMessage("Nice! I've marked this task as done:");
+                        this.ui.printMessage("  " + task);
                         break;
                     }
                     case UNMARK: {
@@ -71,8 +75,8 @@ public class Sigma {
                         task.unmarkDone();
                         String content = lines.get(index);
                         lines.set(index, resetDoneFlag(content));
-                        Ui.printMessage("Ok, I've marked this task as not done yet:");
-                        Ui.printMessage("  " + task);
+                        this.ui.printMessage("Ok, I've marked this task as not done yet:");
+                        this.ui.printMessage("  " + task);
                         break;
                     }
                     case DELETE: {
@@ -83,9 +87,9 @@ public class Sigma {
                         Task task = todo.get(index);
                         todo.remove(index);
                         lines.remove(index);
-                        Ui.printMessage("Noted. I've removed this task:");
-                        Ui.printMessage("  " + task);
-                        Ui.printMessage(String.format("Now you have %d tasks in the list", todo.size()));
+                        this.ui.printMessage("Noted. I've removed this task:");
+                        this.ui.printMessage("  " + task);
+                        this.ui.printMessage(String.format("Now you have %d tasks in the list", todo.size()));
                         break;
                     }
                     case TODO: {
@@ -93,9 +97,9 @@ public class Sigma {
                         Task task = new ToDos(description);
                         todo.add(task);
                         lines.add("T | 0 | " + description + " | - | -");
-                        Ui.printMessage("Got it. I've added this task:");
-                        Ui.printMessage("  " + task);
-                        Ui.printMessage(String.format("Now you have %d tasks in the list.", todo.size()));
+                        this.ui.printMessage("Got it. I've added this task:");
+                        this.ui.printMessage("  " + task);
+                        this.ui.printMessage(String.format("Now you have %d tasks in the list.", todo.size()));
                         break;
                     }
                     case DEADLINE: {
@@ -104,9 +108,9 @@ public class Sigma {
                         Task task = new Deadlines(description, end);
                         todo.add(task);
                         lines.add("D | 0 | " + task.getDescription() + " | - | " + end);
-                        Ui.printMessage("Got it. I've added this task:");
-                        Ui.printMessage("  " + task);
-                        Ui.printMessage(String.format("Now you have %d tasks in the list.", todo.size()));
+                        this.ui.printMessage("Got it. I've added this task:");
+                        this.ui.printMessage("  " + task);
+                        this.ui.printMessage(String.format("Now you have %d tasks in the list.", todo.size()));
                         break;
                     }
                     case EVENT: {
@@ -116,9 +120,9 @@ public class Sigma {
                         Task task = new Events(description, start, end);
                         todo.add(task);
                         lines.add("E | 0 | " + description + " | " + start + " | " + end);
-                        Ui.printMessage("Got it. I've added this task:");
-                        Ui.printMessage("  " + task);
-                        Ui.printMessage(String.format("Now you have %d tasks in the list.", todo.size()));
+                        this.ui.printMessage("Got it. I've added this task:");
+                        this.ui.printMessage("  " + task);
+                        this.ui.printMessage(String.format("Now you have %d tasks in the list.", todo.size()));
                         break;
                     }
                     default:
@@ -130,16 +134,20 @@ public class Sigma {
                 }
 
             } catch (MissingElementException e) {
-                Ui.printMessage(e.getMessage());
+                this.ui.printMessage(e.getMessage());
             } catch (UnknownCommandException e) {
-                Ui.printMessage("Sorry, I don't know what that means QAQ");
+                this.ui.printMessage("Sorry, I don't know what that means QAQ");
             } catch (InvalidIndexException | NumberFormatException e) {
-                Ui.printMessage("Oops, need a valid number as task index Ծ‸Ծ");
+                this.ui.printMessage("Oops, need a valid number as task index Ծ‸Ծ");
             } finally {
-                Ui.showDivisionLine();
+                this.ui.showDivisionLine();
             }
 
         }
+    }
+
+    public static void main(String[] args) {
+            new Sigma().run();
     }
 
     public static ParsedInput handleCommand(String line) throws MissingElementException, UnknownCommandException, NumberFormatException {

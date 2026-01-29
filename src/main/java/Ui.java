@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
-public final class Ui {
+public class Ui {
     private static final String LOGO =
             " ____   ___    ____   __  __     _\n"
                     + "/ ___| |_ _|  / ___| |  \\/  |   / \\\n"
@@ -10,11 +10,11 @@ public final class Ui {
     private static final String NAME = "Sigma";
     private static final int WIDTH = 60;
     private static final String indentation = "    ";
-    private Ui() {
+    public Ui() {
 
     }
 
-    public static void showWelcome() {
+    public void showWelcome() {
         System.out.println("Hello from\n" + LOGO);
         System.out.println(indentation + "_".repeat(WIDTH));
         System.out.println(indentation + "Hello! I'm " + NAME);
@@ -22,26 +22,26 @@ public final class Ui {
         System.out.println(indentation + "_".repeat(WIDTH));
     }
 
-    public static void showDivisionLine() {
+    public void showDivisionLine() {
         System.out.println(indentation + "_".repeat(WIDTH));
     }
 
-    public static void printMessage(String message) {
+    public void printMessage(String message) {
         System.out.println(indentation + message);
     }
 
-    public static void showGoodbye() {
-        Ui.printMessage("Bye. Hope to see you again soon!");
+    public void showGoodbye() {
+        printMessage("Bye. Hope to see you again soon!");
     }
 
-    public static void printTasks(ArrayList<Task> todo) {
+    public void printTasks(ArrayList<Task> todo) {
         int num = 1;
         if (todo.isEmpty()) {
-            Ui.printMessage("Todo list is empty :)");
+            printMessage("Todo list is empty :)");
         } else {
-            Ui.printMessage("Here are the tasks in your list:");
+            printMessage("Here are the tasks in your list:");
             for (Task task : todo) {
-                Ui.printMessage(num + "." + task);
+                printMessage(num + "." + task);
                 num++;
             }
         }
