@@ -26,3 +26,7 @@ out/
 gradle/caches/
 gradle/wrapper/dists/
 gradle/daemon/
+gradle/.tmp/
+gradle/native/
+
+
