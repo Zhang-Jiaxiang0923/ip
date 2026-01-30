@@ -13,14 +13,24 @@ import sigma.task.Task;
 import sigma.task.Events;
 import sigma.task.Deadlines;
 
+/**
+ *
+ */
 public class Storage {
     private final Path target;
     private List<String> lines;
+
     public Storage(Path target) {
         this.lines = new ArrayList<>();
         this.target = target;
     }
 
+    /**
+     * Loads tasks form local memory.
+     * If file not exists, trys to create the file.
+     * If file corrupted, trys to delete and new a file.
+     * @param taskList The tasklist where the local memory will be loaded to.
+     */
     public void load(TaskList taskList) {
         try {
             if (Files.notExists(target)) {
@@ -41,6 +51,11 @@ public class Storage {
         }
     }
 
+    /**
+     * Reads the content in disk and write into the tasklist.
+     * @param taskList The tasklist where tasks read from disk will write to.
+     * @throws CorruptedFileException If contents in the file that it trys to read from is corrupted.
+     */
     private void ReadFromDisk(TaskList taskList) throws CorruptedFileException{
         for (String line: this.lines) {
             String[] p = line.split("\\|", -1);
@@ -76,6 +91,10 @@ public class Storage {
         }
     }
 
+    /**
+     * Marks specific task in disk as done.
+     * @param index The index of the task that will be marked.
+     */
     public void writeMark(int index) {
         try {
             String content = lines.get(index);
@@ -88,6 +107,10 @@ public class Storage {
         }
     }
 
+    /**
+     * Unmarks specific task in disk as hasn't done.
+     * @param index The index of the task that will be unmarked.
+     */
     public void writeUnmark(int index) {
         try {
             String content = lines.get(index);
@@ -100,6 +123,10 @@ public class Storage {
         }
     }
 
+    /**
+     * Deletes specific task in disk.
+     * @param index The index of the task that will be deleted.
+     */
     public void writeDelete(int index) {
         try {
             lines.remove(index);
@@ -109,6 +136,10 @@ public class Storage {
         }
     }
 
+    /**
+     * Writes a Todo task into the disk.
+     * @param description The description of the ToDo task.
+     */
     public void writeTodo(String description) {
         try {
             lines.add("T | 0 | " + description + " | - | -");
@@ -118,6 +149,11 @@ public class Storage {
         }
     }
 
+    /**
+     * Writes a Deadline into the disk.
+     * @param description The description of the Deadline.
+     * @param end The end time of the Deadline.
+     */
     public void writeDeadline(String description, LocalDate end) {
         try {
             lines.add("D | 0 | " + description + " | - | " + end);
@@ -127,6 +163,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Writes an Event task into the disk.
+     * @param description The description of the Deadline task.
+     * @param start The start time of the Event.
+     * @param end The end time of the Event.
+     */
     public void writeEvent(String description, LocalDate start, LocalDate end) {
         try {
             lines.add("E | 0 | " + description + " | " + start + " | " + end);

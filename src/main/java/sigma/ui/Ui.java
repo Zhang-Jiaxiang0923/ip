@@ -1,9 +1,10 @@
 package sigma.ui;
 
-import java.util.ArrayList;
-import java.util.Scanner;
 import sigma.task.TaskList;
 
+/**
+ * Provides the text-based interface for Sigma (prompts, responses, and error messages).
+ */
 public class Ui {
     private static final String LOGO =
             " ____   ___    ____   __  __     _\n"
@@ -18,6 +19,9 @@ public class Ui {
 
     }
 
+    /**
+     * Prints the logo and welcome messages.
+     */
     public void showWelcome() {
         System.out.println("Hello from\n" + LOGO);
         System.out.println(indentation + "_".repeat(WIDTH));
@@ -26,18 +30,32 @@ public class Ui {
         System.out.println(indentation + "_".repeat(WIDTH));
     }
 
+    /**
+     * Prints the division line between user input and application output.
+     */
     public void showDivisionLine() {
         System.out.println(indentation + "_".repeat(WIDTH));
     }
 
+    /**
+     * Prints the message with indentations.
+     * @param message The message to be printed.
+     */
     public void printMessage(String message) {
         System.out.println(indentation + message);
     }
 
+    /**
+     * Prints the goodbye message.
+     */
     public void showGoodbye() {
         printMessage("Bye. Hope to see you again soon!");
     }
 
+    /**
+     * Prints all tasks in the tasklist.
+     * @param taskList User's task list to be displayed.
+     */
     public void printTasks(TaskList taskList) {
         if (taskList.isEmpty()) {
             printMessage("Todo list is empty :)");

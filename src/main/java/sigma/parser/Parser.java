@@ -4,11 +4,23 @@ import sigma.command.CommandType;
 import sigma.exception.MissingElementException;
 import sigma.exception.UnknownCommandException;
 
+/**
+ * Parses the user input of Sigma application.
+ */
 public class Parser {
     private Parser() {
 
     }
 
+    /**
+     * Returns parsed input of user unstructured input.
+     *
+     * @param input Input of Sigma application.
+     * @return Parsed input.
+     * @throws MissingElementException If some element of input is missed.
+     * @throws UnknownCommandException If input command type is unknown.
+     * @throws NumberFormatException If an index in the input is not a valid integer.
+     */
     public static ParsedInput parseInput(String input)
             throws MissingElementException, UnknownCommandException, NumberFormatException {
         String[] parts = input.trim().split("\\s+", 2);

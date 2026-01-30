@@ -19,7 +19,10 @@ import sigma.parser.ParsedInput;
 import sigma.parser.Parser;
 import sigma.command.CommandType;
 
-
+/**
+ * Runs the Sigma task manager application. Coordinates with Ui,
+ * storage, and parser etc. for Sigma.
+ */
 public class Sigma {
     private final Ui ui;
     private final Storage storage;
@@ -31,6 +34,9 @@ public class Sigma {
         this.taskList = new TaskList();
     }
 
+    /**
+     * Runs the whole Sigma application.
+     */
     public void run() {
         Scanner sc = new Scanner(System.in);
         this.storage.load(this.taskList);
@@ -132,6 +138,11 @@ public class Sigma {
         }
     }
 
+    /**
+     * Starts the Sigma application.
+     *
+     * @param args Command-line arguments (unused).
+     */
     public static void main(String[] args) {
         Path target = Paths.get(System.getProperty("user.dir"))
                 .resolve(Paths.get("data", "Sigma.txt"));
