@@ -9,13 +9,6 @@ public class ParsedInput {
     protected String description;
     protected LocalDate start, end;
     protected int index;
-    public ParsedInput (CommandType command, String description, int index, String start, String end) {
-        this.command = command;
-        this.description = description;
-        this.start = parseTime(start);
-        this.end = parseTime(end);
-        this.index = index;
-    }
 
     public ParsedInput (CommandType command, String description) {
         this.command = command;
