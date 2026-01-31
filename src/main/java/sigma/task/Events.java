@@ -1,8 +1,9 @@
 package sigma.task;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class Events extends Task{
+public class Events extends Task {
     protected LocalDate start;
     protected LocalDate end;
 
@@ -13,7 +14,7 @@ public class Events extends Task{
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         String startTime = start.format(DateTimeFormatter.ofPattern("MMM d yyyy"));
         String endTime = end.format(DateTimeFormatter.ofPattern("MMM d yyyy"));
         return "[E]" + super.toString() + " (from: " + startTime + " to: " + endTime + ")";

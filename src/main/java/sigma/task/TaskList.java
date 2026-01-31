@@ -1,8 +1,10 @@
 package sigma.task;
+
 import java.util.ArrayList;
 
 public class TaskList {
     private final ArrayList<Task> todo;
+
     public TaskList() {
         this.todo = new ArrayList<>();
     }

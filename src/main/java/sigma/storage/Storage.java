@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 import sigma.exception.CorruptedFileException;
 import sigma.task.ToDos;
 import sigma.task.TaskList;
@@ -16,6 +17,7 @@ import sigma.task.Deadlines;
 public class Storage {
     private final Path target;
     private List<String> lines;
+
     public Storage(Path target) {
         this.lines = new ArrayList<>();
         this.target = target;
@@ -41,37 +43,37 @@ public class Storage {
         }
     }
 
-    private void ReadFromDisk(TaskList taskList) throws CorruptedFileException{
-        for (String line: this.lines) {
+    private void ReadFromDisk(TaskList taskList) throws CorruptedFileException {
+        for (String line : this.lines) {
             String[] p = line.split("\\|", -1);
             if (p.length != 5) {
                 throw new CorruptedFileException("Files are corrupted");
             }
             switch (p[0].trim()) {
-                case "T": {
-                    Task task = new ToDos(p[2].trim());
-                    if (p[1].equals("1")) {
-                        task.markAsDone();
-                    }
-                    taskList.addTask(task);
-                    break;
+            case "T": {
+                Task task = new ToDos(p[2].trim());
+                if (p[1].equals("1")) {
+                    task.markAsDone();
                 }
-                case "D": {
-                    Task task = new Deadlines(p[2].trim(), LocalDate.parse(p[4].trim()));
-                    if (p[1].equals("1")) {
-                        task.markAsDone();
-                    }
-                    taskList.addTask(task);
-                    break;
+                taskList.addTask(task);
+                break;
+            }
+            case "D": {
+                Task task = new Deadlines(p[2].trim(), LocalDate.parse(p[4].trim()));
+                if (p[1].equals("1")) {
+                    task.markAsDone();
                 }
-                case "E": {
-                    Task task = new Events(p[2].trim(), LocalDate.parse(p[3].trim()), LocalDate.parse(p[4].trim()));
-                    if (p[1].equals("1")) {
-                        task.markAsDone();
-                    }
-                    taskList.addTask(task);
-                    break;
+                taskList.addTask(task);
+                break;
+            }
+            case "E": {
+                Task task = new Events(p[2].trim(), LocalDate.parse(p[3].trim()), LocalDate.parse(p[4].trim()));
+                if (p[1].equals("1")) {
+                    task.markAsDone();
                 }
+                taskList.addTask(task);
+                break;
+            }
             }
         }
     }

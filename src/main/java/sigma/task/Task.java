@@ -1,4 +1,5 @@
 package sigma.task;
+
 import jdk.jfr.Description;
 
 public class Task {
@@ -10,7 +11,9 @@ public class Task {
         this.isDone = false;
     }
 
-    public String getSymbol() {return " ";}
+    public String getSymbol() {
+        return " ";
+    }
 
     public String getStatusIcon() {
         return (isDone ? "X" : " ");

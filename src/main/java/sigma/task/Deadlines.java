@@ -1,8 +1,9 @@
 package sigma.task;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class Deadlines extends Task{
+public class Deadlines extends Task {
     protected LocalDate by;
 
     public Deadlines(String description, LocalDate by) {
