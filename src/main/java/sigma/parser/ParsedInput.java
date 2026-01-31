@@ -2,6 +2,7 @@ package sigma.parser;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
 import sigma.command.CommandType;
 
 public class ParsedInput {
@@ -10,12 +11,12 @@ public class ParsedInput {
     protected LocalDate start, end;
     protected int index;
 
-    public ParsedInput (CommandType command, String description) {
+    public ParsedInput(CommandType command, String description) {
         this.command = command;
         this.description = description;
     }
 
-    public ParsedInput (CommandType command, int index) {
+    public ParsedInput(CommandType command, int index) {
         this.command = command;
         this.index = index;
     }

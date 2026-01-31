@@ -16,6 +16,7 @@ public class Ui {
     private static final String NAME = "Sigma";
     private static final int WIDTH = 60;
     private static final String indentation = "    ";
+
     public Ui() {
 
     }
@@ -46,7 +47,7 @@ public class Ui {
         } else {
             printMessage("Here are the tasks in your list:");
             for (int i = 1; i <= taskList.getLength(); i++) {
-                printMessage(i + "." + taskList.getTask(i-1));
+                printMessage(i + "." + taskList.getTask(i - 1));
             }
         }
     }
@@ -57,7 +58,7 @@ public class Ui {
         } else {
             printMessage("Here are the matching tasks in your list:");
             for (int i = 1; i <= finding.size(); i++) {
-                printMessage(1 + "." + finding.get(i-1));
+                printMessage(1 + "." + finding.get(i - 1));
             }
         }
     }

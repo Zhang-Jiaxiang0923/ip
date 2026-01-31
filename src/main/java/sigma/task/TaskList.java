@@ -1,8 +1,10 @@
 package sigma.task;
+
 import java.util.ArrayList;
 
 public class TaskList {
     private final ArrayList<Task> todo;
+
     public TaskList() {
         this.todo = new ArrayList<>();
     }
@@ -27,7 +29,7 @@ public class TaskList {
 
     public ArrayList<Task> lookUp(String keywords) {
         ArrayList<Task> finding = new ArrayList<>();
-        for (Task task: todo) {
+        for (Task task : todo) {
             String description = task.getDescription();
             if (description.contains(keywords)) {
                 finding.add(task);
