@@ -69,4 +69,15 @@ public class Ui {
             }
         }
     }
+
+    public void printFinding(ArrayList<Task> finding) {
+        if (finding.isEmpty()) {
+            printMessage("No matching task in your list");
+        } else {
+            printMessage("Here are the matching tasks in your list:");
+            for (int i = 1; i <= finding.size(); i++) {
+                printMessage(1 + "." + finding.get(i - 1));
+            }
+        }
+    }
 }

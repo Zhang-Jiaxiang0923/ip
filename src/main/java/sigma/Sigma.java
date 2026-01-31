@@ -1,6 +1,7 @@
 package sigma;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -89,7 +90,10 @@ public class Sigma {
                     this.ui.printMessage(String.format("Now you have %d tasks in the list", taskList.getLength()));
                     break;
                 }
-                case TODO: {
+                case LOOK: {
+                    ArrayList<Task> finding = this.taskList.lookUp(input.getDescription());
+                    this.ui.printFinding(finding);
+                    break;
                     String description = input.getDescription();
                     Task task = new ToDos(description);
                     this.taskList.addTask(task);

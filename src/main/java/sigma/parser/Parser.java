@@ -59,6 +59,13 @@ public class Parser {
                 return new ParsedInput(CommandType.DELETE, index);
             }
         }
+        case "look": {
+            if (parts.length == 1) {
+                throw new MissingElementException("Oops, missing keywords. Which keyword do you want to look for?");
+            } else {
+                return new ParsedInput(CommandType.LOOK, parts[1]);
+            }
+        }
         case "todo": {
             if (parts.length == 1) {
                 throw new MissingElementException("Oops, could you give me the todo description?");
