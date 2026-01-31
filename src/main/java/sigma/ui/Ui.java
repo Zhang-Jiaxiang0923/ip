@@ -15,6 +15,7 @@ public class Ui {
     private static final String NAME = "Sigma";
     private static final int WIDTH = 60;
     private static final String indentation = "    ";
+
     public Ui() {
 
     }
@@ -39,6 +40,7 @@ public class Ui {
 
     /**
      * Prints the message with indentations.
+     *
      * @param message The message to be printed.
      */
     public void printMessage(String message) {
@@ -54,6 +56,7 @@ public class Ui {
 
     /**
      * Prints all tasks in the tasklist.
+     *
      * @param taskList User's task list to be displayed.
      */
     public void printTasks(TaskList taskList) {
@@ -62,7 +65,7 @@ public class Ui {
         } else {
             printMessage("Here are the tasks in your list:");
             for (int i = 1; i <= taskList.getLength(); i++) {
-                printMessage(i + "." + taskList.getTask(i-1));
+                printMessage(i + "." + taskList.getTask(i - 1));
             }
         }
     }

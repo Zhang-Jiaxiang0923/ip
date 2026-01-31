@@ -2,6 +2,7 @@ package sigma.parser;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
 import sigma.command.CommandType;
 
 /**
@@ -13,12 +14,12 @@ public class ParsedInput {
     protected LocalDate start, end;
     protected int index;
 
-    public ParsedInput (CommandType command, String description) {
+    public ParsedInput(CommandType command, String description) {
         this.command = command;
         this.description = description;
     }
 
-    public ParsedInput (CommandType command, int index) {
+    public ParsedInput(CommandType command, int index) {
         this.command = command;
         this.index = index;
     }
@@ -42,6 +43,7 @@ public class ParsedInput {
 
     /**
      * Returns the command type.
+     *
      * @return Command type.
      */
     public CommandType getCommand() {
@@ -50,6 +52,7 @@ public class ParsedInput {
 
     /**
      * Returns the description of the task.
+     *
      * @return Description of the task.
      */
     public String getDescription() {
@@ -58,6 +61,7 @@ public class ParsedInput {
 
     /**
      * Returns the start time of task.
+     *
      * @return The start time of task.
      */
     public LocalDate getStart() {
@@ -66,6 +70,7 @@ public class ParsedInput {
 
     /**
      * Returns the end time of task.
+     *
      * @return The end time of task.
      */
     public LocalDate getEnd() {
@@ -74,6 +79,7 @@ public class ParsedInput {
 
     /**
      * Returns the index of the task that user want to operate.
+     *
      * @return The index of the task that user want to operate.
      */
     public int getIndex() {
@@ -82,6 +88,7 @@ public class ParsedInput {
 
     /**
      * Returns LocalDate of the given time.
+     *
      * @param time Time.
      * @return LocalDate of the given time
      */

@@ -1,4 +1,5 @@
 package sigma.task;
+
 import java.util.ArrayList;
 
 /**
@@ -6,12 +7,14 @@ import java.util.ArrayList;
  */
 public class TaskList {
     private final ArrayList<Task> todo;
+
     public TaskList() {
         this.todo = new ArrayList<>();
     }
 
     /**
      * Adds a task into the tasklist.
+     *
      * @param task Task to be added into tasklist.
      */
     public void addTask(Task task) {
@@ -20,6 +23,7 @@ public class TaskList {
 
     /**
      * Deletes specific task in the tasklist.
+     *
      * @param index The index of the task that is going to be deleted.
      */
     public void deleteTask(int index) {
@@ -28,6 +32,7 @@ public class TaskList {
 
     /**
      * Marks a specific task in the tasklist as done.
+     *
      * @param index The index of the task that is going to be marked.
      */
     public void markTask(int index) {
@@ -37,6 +42,7 @@ public class TaskList {
 
     /**
      * Unmarks a specific task in the tasklist as hasn't done.
+     *
      * @param index The index of the task that is going to be unmarked.
      */
     public void unmarkTask(int index) {

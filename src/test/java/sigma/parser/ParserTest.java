@@ -1,6 +1,7 @@
 package sigma.parser;
 
 import org.junit.jupiter.api.Test;
+
 import sigma.command.CommandType;
 import sigma.parser.ParsedInput;
 import sigma.parser.Parser;
