@@ -2,6 +2,8 @@ package sigma.ui;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import sigma.task.Task;
 import sigma.task.TaskList;
 
 public class Ui {
@@ -45,6 +47,17 @@ public class Ui {
             printMessage("Here are the tasks in your list:");
             for (int i = 1; i <= taskList.getLength(); i++) {
                 printMessage(i + "." + taskList.getTask(i-1));
+            }
+        }
+    }
+
+    public void printFinding(ArrayList<Task> finding) {
+        if (finding.isEmpty()) {
+            printMessage("No matching task in your list");
+        } else {
+            printMessage("Here are the matching tasks in your list:");
+            for (int i = 1; i <= finding.size(); i++) {
+                printMessage(1 + "." + finding.get(i-1));
             }
         }
     }

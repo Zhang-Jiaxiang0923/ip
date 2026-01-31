@@ -37,7 +37,6 @@ public class ParsedInput {
         this.command = command;
     }
 
-
     public CommandType getCommand() {
         return this.command;
     }

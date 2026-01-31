@@ -25,6 +25,17 @@ public class TaskList {
         task.unmarkDone();
     }
 
+    public ArrayList<Task> lookUp(String keywords) {
+        ArrayList<Task> finding = new ArrayList<>();
+        for (Task task: todo) {
+            String description = task.getDescription();
+            if (description.contains(keywords)) {
+                finding.add(task);
+            }
+        }
+        return finding;
+    }
+
     public Task getTask(int index) {
         return todo.get(index);
     }
