@@ -1,6 +1,9 @@
 package sigma.ui;
 
+import java.util.ArrayList;
+
 import sigma.task.TaskList;
+import sigma.task.Task;
 
 /**
  * Provides the text-based interface for Sigma (prompts, responses, and error messages).
@@ -76,7 +79,7 @@ public class Ui {
         } else {
             printMessage("Here are the matching tasks in your list:");
             for (int i = 1; i <= finding.size(); i++) {
-                printMessage(1 + "." + finding.get(i - 1));
+                printMessage(i + "." + finding.get(i - 1));
             }
         }
     }

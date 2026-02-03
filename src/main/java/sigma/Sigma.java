@@ -94,14 +94,6 @@ public class Sigma {
                     ArrayList<Task> finding = this.taskList.lookUp(input.getDescription());
                     this.ui.printFinding(finding);
                     break;
-                    String description = input.getDescription();
-                    Task task = new ToDos(description);
-                    this.taskList.addTask(task);
-                    this.storage.writeTodo(description);
-                    this.ui.printMessage("Got it. I've added this task:");
-                    this.ui.printMessage("  " + task);
-                    this.ui.printMessage(String.format("Now you have %d tasks in the list.", taskList.getLength()));
-                    break;
                 }
                 case DEADLINE: {
                     LocalDate end = input.getEnd();
