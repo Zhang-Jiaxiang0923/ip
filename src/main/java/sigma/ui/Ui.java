@@ -88,4 +88,41 @@ public class Ui {
             }
         }
     }
+
+    public String getMessage(String message) {
+        return indentation + message;
+    }
+
+    public String getFinding(ArrayList<Task> finding) {
+        if (finding.isEmpty()) {
+            return "No matching task in your list";
+        } else {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Here are the matching tasks in your list:\n");
+            for (int i = 1; i <= finding.size(); i++) {
+                sb.append(i + "." + finding.get(i - 1) + "\n");
+            }
+            return sb.toString();
+        }
+    }
+
+    public String getTasks(TaskList taskList) {
+        if (taskList.isEmpty()) {
+            return "Todo list is empty :)";
+        } else {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Here are the tasks in your list:\n");
+            for (int i = 1; i <= taskList.getLength(); i++) {
+                sb.append(i + "." + taskList.getTask(i - 1) + "\n");
+            }
+            return sb.toString();
+        }
+    }
+
+    public String getGoodbye() {
+        return "Bye. Hope to see you again soon!";
+    }
+
+
+
 }
