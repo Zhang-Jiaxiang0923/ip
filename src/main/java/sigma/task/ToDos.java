@@ -1,5 +1,8 @@
 package sigma.task;
 
+/**
+ * Subclass of Task that only have description.
+ */
 public class ToDos extends Task {
     public ToDos(String description) {
         super(description);

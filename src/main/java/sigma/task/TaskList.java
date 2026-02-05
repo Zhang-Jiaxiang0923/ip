@@ -50,6 +50,11 @@ public class TaskList {
         task.unmarkDone();
     }
 
+    /**
+     * Looks up the tasklist for tasks with keyword in the task description.
+     * @param keywords The keywords used to find related tasks.
+     * @return An arraylist of Task that have keywords in their task descriptions.
+     */
     public ArrayList<Task> lookUp(String keywords) {
         ArrayList<Task> finding = new ArrayList<>();
         for (Task task : todo) {

@@ -1,14 +1,12 @@
 package sigma.parser;
 
-import org.junit.jupiter.api.Test;
-
-import sigma.command.CommandType;
-import sigma.parser.ParsedInput;
-import sigma.parser.Parser;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
+
+import sigma.command.CommandType;
 
 public class ParserTest {
     @Test
