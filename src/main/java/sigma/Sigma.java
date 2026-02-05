@@ -159,4 +159,14 @@ public class Sigma {
                 .resolve(Paths.get("data", "Sigma.txt"));
         new Sigma(target).run();
     }
+
+    /**
+     * Generates a response for the user's chat message.
+     */
+    public String getResponse(String input) {
+//        return "Duke heard: " + input;
+        return "没我danking谁认识你吴世勋？";
+    }
+
+
 }
