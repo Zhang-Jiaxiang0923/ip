@@ -1,24 +1,25 @@
 package sigma;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
+import sigma.command.CommandType;
 import sigma.exception.InvalidIndexException;
 import sigma.exception.MissingElementException;
 import sigma.exception.UnknownCommandException;
-import sigma.storage.Storage;
-import sigma.task.ToDos;
-import sigma.task.TaskList;
-import sigma.task.Task;
-import sigma.task.Events;
-import sigma.task.Deadlines;
-import sigma.ui.Ui;
 import sigma.parser.ParsedInput;
 import sigma.parser.Parser;
-import sigma.command.CommandType;
+import sigma.storage.Storage;
+import sigma.task.Deadlines;
+import sigma.task.Events;
+import sigma.task.Task;
+import sigma.task.TaskList;
+import sigma.task.ToDos;
+import sigma.ui.Ui;
+
 
 /**
  * Runs the Sigma task manager application. Coordinates with Ui,
@@ -29,6 +30,10 @@ public class Sigma {
     private final Storage storage;
     private final TaskList taskList;
 
+    /**
+     * Constructs the Sigma class by the target path
+     * @param target The path where the Sigma where store the data in.
+     */
     public Sigma(Path target) {
         ui = new Ui();
         this.storage = new Storage(target);
@@ -93,6 +98,16 @@ public class Sigma {
                 case LOOK: {
                     ArrayList<Task> finding = this.taskList.lookUp(input.getDescription());
                     this.ui.printFinding(finding);
+                    break;
+                }
+                case TODO: {
+                    String description = input.getDescription();
+                    Task task = new ToDos(description);
+                    taskList.addTask(task);
+                    this.storage.writeTodo(description);
+                    this.ui.printMessage("Got it. I've added this task:");
+                    this.ui.printMessage("  " + task);
+                    this.ui.printMessage(String.format("Now you have %d tasks in the list.", taskList.getLength()));
                     break;
                 }
                 case DEADLINE: {

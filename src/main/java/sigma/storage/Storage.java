@@ -8,19 +8,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sigma.exception.CorruptedFileException;
-import sigma.task.ToDos;
-import sigma.task.TaskList;
-import sigma.task.Task;
-import sigma.task.Events;
 import sigma.task.Deadlines;
+import sigma.task.Events;
+import sigma.task.Task;
+import sigma.task.TaskList;
+import sigma.task.ToDos;
 
 /**
- *
+ * Class that deals with loading and writing into specific file.
  */
 public class Storage {
     private final Path target;
     private List<String> lines;
 
+    /**
+     * Constructs the storage object.
+     * @param target The file path that the storage object will load and write to.
+     */
     public Storage(Path target) {
         this.lines = new ArrayList<>();
         this.target = target;
@@ -41,7 +45,7 @@ public class Storage {
             } else {
                 try {
                     this.lines = Files.readAllLines(this.target);
-                    ReadFromDisk(taskList);
+                    readFromDisk(taskList);
                 } catch (CorruptedFileException e) {
                     Files.deleteIfExists(target);
                     Files.createDirectories(target.getParent());
@@ -59,7 +63,7 @@ public class Storage {
      * @param taskList The tasklist where tasks read from disk will write to.
      * @throws CorruptedFileException If contents in the file that it trys to read from is corrupted.
      */
-    private void ReadFromDisk(TaskList taskList) throws CorruptedFileException {
+    private void readFromDisk(TaskList taskList) throws CorruptedFileException {
         for (String line : this.lines) {
             String[] p = line.split("\\|", -1);
             if (p.length != 5) {
@@ -90,6 +94,7 @@ public class Storage {
                 taskList.addTask(task);
                 break;
             }
+            default:
             }
         }
     }

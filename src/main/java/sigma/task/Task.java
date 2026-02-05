@@ -7,6 +7,11 @@ public class Task {
     protected String description;
     protected boolean isDone;
 
+    /**
+     * Constructs the Task based on description.
+     *
+     * @param description The description of the task.
+     */
     public Task(String description) {
         this.description = description;
         this.isDone = false;

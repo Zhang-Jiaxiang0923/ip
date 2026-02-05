@@ -2,8 +2,9 @@ package sigma.ui;
 
 import java.util.ArrayList;
 
-import sigma.task.TaskList;
 import sigma.task.Task;
+import sigma.task.TaskList;
+
 
 /**
  * Provides the text-based interface for Sigma (prompts, responses, and error messages).
@@ -73,6 +74,10 @@ public class Ui {
         }
     }
 
+    /**
+     * Prints tasks that are found based on the keyword.
+     * @param finding An arraylist of tasks that are found.
+     */
     public void printFinding(ArrayList<Task> finding) {
         if (finding.isEmpty()) {
             printMessage("No matching task in your list");
