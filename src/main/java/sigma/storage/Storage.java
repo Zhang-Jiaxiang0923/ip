@@ -153,12 +153,7 @@ public class Storage {
      * @param description The description of the ToDo task.
      */
     public void writeTodo(String description) {
-        try {
-            lines.add("T | 0 | " + description + " | - | -");
-            Files.write(target, lines);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to write in the file.");
-        }
+        writeTask('T', description);
     }
 
     /**
@@ -168,12 +163,7 @@ public class Storage {
      * @param end         The end time of the Deadline.
      */
     public void writeDeadline(String description, LocalDate end) {
-        try {
-            lines.add("D | 0 | " + description + " | - | " + end);
-            Files.write(target, lines);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to write in the file.");
-        }
+        writeTask('D', description, end);
     }
 
     /**
@@ -184,11 +174,26 @@ public class Storage {
      * @param end         The end time of the Event.
      */
     public void writeEvent(String description, LocalDate start, LocalDate end) {
+        writeTask('E', description, start, end);
+    }
+
+    public void writeTask(char type, String description, LocalDate... dates) {
         try {
-            lines.add("E | 0 | " + description + " | " + start + " | " + end);
+            StringBuilder sb = new StringBuilder();
+            sb.append(type).append(" | 0 | ").append(description).append(" | ");
+
+            if (dates.length == 0) {
+                sb.append("- | -");
+            } else if (dates.length == 1) {
+                sb.append("- | ").append(dates[0]);
+            } else {
+                sb.append(dates[0]).append(" | ").append(dates[1]);
+            }
+
+            lines.add(sb.toString());
             Files.write(target, lines);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to write in the file.");
+            throw new RuntimeException("Failed to write in the file.", e);
         }
     }
 
