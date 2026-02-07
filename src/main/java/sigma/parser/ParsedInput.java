@@ -41,27 +41,19 @@ public class ParsedInput {
      *
      * @param command The CommandType of the user input.
      * @param description The description of the task.
-     * @param end The deadline of the task.
+     * @param times The time(s) of the task: [end] or [start, end].
      */
-    public ParsedInput(CommandType command, String description, String end) {
+    public ParsedInput(CommandType command, String description, String... times) {
         this.command = command;
         this.description = description;
-        this.end = parseTime(end);
-    }
-
-    /**
-     * Constructs the ParsedInput by CommandType, task description, task start time and task end time.
-     *
-     * @param command The CommandType of the user input.
-     * @param description The description of the task.
-     * @param start The start time of the task.
-     * @param end The end time of the task.
-     */
-    public ParsedInput(CommandType command, String description, String start, String end) {
-        this.command = command;
-        this.description = description;
-        this.start = parseTime(start);
-        this.end = parseTime(end);
+        if (times.length == 1) {
+            this.end = parseTime(times[0]);
+        } else if (times.length == 2) {
+            this.start = parseTime(times[0]);
+            this.end = parseTime(times[1]);
+        } else {
+            throw new IllegalArgumentException("Expected 1 (deadline) or 2 (event) time values.");
+        }
     }
 
     /**
