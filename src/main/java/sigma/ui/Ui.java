@@ -89,10 +89,11 @@ public class Ui {
         }
     }
 
-    public String getMessage(String message) {
-        return indentation + message;
-    }
-
+    /**
+     * Gets the String of tasks that are found based on the keyword.
+     * @param finding An arraylist of tasks that are found.
+     * @return String of tasks that are found based on the keyword.
+     */
     public String getFinding(ArrayList<Task> finding) {
         if (finding.isEmpty()) {
             return "No matching task in your list";
