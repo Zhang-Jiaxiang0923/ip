@@ -140,6 +140,9 @@ public class Storage {
      */
     public void writeDelete(int index) {
         try {
+            if (index < 0 || index >= lines.size()) {
+                throw new IllegalArgumentException("Invalid task index: " + index);
+            }
             lines.remove(index);
             Files.write(target, lines);
         } catch (IOException e) {

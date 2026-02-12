@@ -24,6 +24,7 @@ public class Parser {
     public static ParsedInput parseInput(String input)
             throws MissingElementException, UnknownCommandException, NumberFormatException {
         String[] parts = input.trim().split("\\s+", 2);
+        assert parts.length >= 1 : "length of parts should >= 1";
         String s = parts[0];
         switch (s) {
         case "bye": {

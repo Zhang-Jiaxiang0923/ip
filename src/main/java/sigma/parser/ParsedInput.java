@@ -21,6 +21,8 @@ public class ParsedInput {
      * @param description The description of the task.
      */
     public ParsedInput(CommandType command, String description) {
+        assert command != null;
+        assert description != null;
         this.command = command;
         this.description = description;
     }
@@ -32,6 +34,8 @@ public class ParsedInput {
      * @param index The index of the task that user want to operate.
      */
     public ParsedInput(CommandType command, int index) {
+        assert command != null;
+        assert index > 0;
         this.command = command;
         this.index = index;
     }
@@ -44,6 +48,8 @@ public class ParsedInput {
      * @param times The time(s) of the task: [end] or [start, end].
      */
     public ParsedInput(CommandType command, String description, String... times) {
+        assert command != null;
+        assert description != null;
         this.command = command;
         this.description = description;
         if (times.length == 1) {
@@ -62,6 +68,7 @@ public class ParsedInput {
      * @param command The CommandType of the user input.
      */
     public ParsedInput(CommandType command) {
+        assert command != null;
         this.command = command;
     }
 
@@ -117,6 +124,7 @@ public class ParsedInput {
      * @return LocalDate of the given time
      */
     public static LocalDate parseTime(String time) {
+        assert time != null;
         return LocalDate.parse(time);
     }
 }
