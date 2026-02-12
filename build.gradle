@@ -50,6 +50,7 @@ application {
 shadowJar {
     archiveBaseName = "sigma"
     archiveClassifier = null
+    archiveFileName = "sigma.jar"
 }
 
 run{
