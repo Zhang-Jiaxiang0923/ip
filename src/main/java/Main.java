@@ -10,9 +10,9 @@ import javafx.stage.Stage;
 import sigma.Sigma;
 
 public class Main extends Application {
-    private static Path target = Paths.get(System.getProperty("user.dir"))
+    private static final Path target = Paths.get(System.getProperty("user.dir"))
             .resolve(Paths.get("data", "Sigma.txt"));
-    private Sigma sigma = new Sigma(target);
+    private final Sigma sigma = new Sigma(target);
 
 
     @Override
