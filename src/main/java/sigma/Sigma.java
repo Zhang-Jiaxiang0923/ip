@@ -65,37 +65,18 @@ public class Sigma {
                     this.ui.printTasks(this.taskList);
                     break;
                 case MARK: {
-                    int index = input.getIndex();
-                    if (index >= taskList.getLength() || index < 0) {
-                        throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
-                    }
-                    taskList.markTask(index);
-                    this.storage.writeMark(index);
-                    this.ui.printMessage("Nice! I've marked this task as done:");
-                    this.ui.printMessage("  " + taskList.getTask(index));
+                    handleMark(input);
+                    this.ui.printMarkMessage(taskList.getTask(input.getIndex()));
                     break;
                 }
                 case UNMARK: {
-                    int index = input.getIndex();
-                    if (index >= taskList.getLength() || index < 0) {
-                        throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
-                    }
-                    taskList.unmarkTask(index);
-                    this.storage.writeUnmark(index);
-                    this.ui.printMessage("Ok, I've marked this task as not done yet:");
-                    this.ui.printMessage("  " + taskList.getTask(index));
+                    handleUnmark(input);
+                    this.ui.printUnmarkMessage(taskList.getTask(input.getIndex()));
                     break;
                 }
                 case DELETE: {
-                    int index = input.getIndex();
-                    if (index >= taskList.getLength() || index < 0) {
-                        throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
-                    }
-                    this.taskList.deleteTask(index);
-                    this.storage.writeDelete(index);
-                    this.ui.printMessage("Noted. I've removed this task:");
-                    this.ui.printMessage("  " + taskList.getTask(index));
-                    this.ui.printMessage(String.format("Now you have %d tasks in the list", taskList.getLength()));
+                    this.ui.printDeleteMessage(taskList.getTask(input.getIndex()), taskList.getLength()-1);
+                    handleDelete(input);
                     break;
                 }
                 case LOOK: {
@@ -104,36 +85,18 @@ public class Sigma {
                     break;
                 }
                 case TODO: {
-                    String description = input.getDescription();
-                    Task task = new ToDos(description);
-                    taskList.addTask(task);
-                    this.storage.writeTodo(description);
-                    this.ui.printMessage("Got it. I've added this task:");
-                    this.ui.printMessage("  " + task);
-                    this.ui.printMessage(String.format("Now you have %d tasks in the list.", taskList.getLength()));
+                    handleTodo(input);
+                    this.ui.printAddMessage(taskList);
                     break;
                 }
                 case DEADLINE: {
-                    LocalDate end = input.getEnd();
-                    String description = input.getDescription();
-                    Task task = new Deadlines(description, end);
-                    taskList.addTask(task);
-                    this.storage.writeDeadline(description, end);
-                    this.ui.printMessage("Got it. I've added this task:");
-                    this.ui.printMessage("  " + task);
-                    this.ui.printMessage(String.format("Now you have %d tasks in the list.", taskList.getLength()));
+                    handleDeadline(input);
+                    this.ui.printAddMessage(taskList);
                     break;
                 }
                 case EVENT: {
-                    LocalDate end = input.getEnd();
-                    LocalDate start = input.getStart();
-                    String description = input.getDescription();
-                    Task task = new Events(description, start, end);
-                    this.taskList.addTask(task);
-                    this.storage.writeEvent(description, start, end);
-                    this.ui.printMessage("Got it. I've added this task:");
-                    this.ui.printMessage("  " + task);
-                    this.ui.printMessage(String.format("Now you have %d tasks in the list.", taskList.getLength()));
+                    handleEvent(input);
+                    this.ui.printAddMessage(taskList);
                     break;
                 }
                 default:
@@ -258,4 +221,54 @@ public class Sigma {
     }
 
 
+    public void handleMark(ParsedInput input) {
+        int index = input.getIndex();
+        if (index >= taskList.getLength() || index < 0) {
+            throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
+        }
+        taskList.markTask(index);
+        this.storage.writeMark(index);
+    }
+
+    public void handleUnmark(ParsedInput input) {
+        int index = input.getIndex();
+        if (index >= taskList.getLength() || index < 0) {
+            throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
+        }
+        taskList.unmarkTask(index);
+        this.storage.writeUnmark(index);
+    }
+
+    public void handleDelete(ParsedInput input) {
+        int index = input.getIndex();
+        if (index >= taskList.getLength() || index < 0) {
+            throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
+        }
+        this.taskList.deleteTask(index);
+        this.storage.writeDelete(index);
+    }
+
+    public void handleTodo(ParsedInput input) {
+        String description = input.getDescription();
+        Task task = new ToDos(description);
+        this.taskList.addTask(task);
+        this.storage.writeTodo(description);
+    }
+
+    public void handleDeadline(ParsedInput input) {
+        LocalDate end = input.getEnd();
+        String description = input.getDescription();
+        Task task = new Deadlines(description, end);
+        taskList.addTask(task);
+        this.storage.writeDeadline(description, end);
+    }
+
+    public void handleEvent(ParsedInput input) {
+        LocalDate end = input.getEnd();
+        LocalDate start = input.getStart();
+        String description = input.getDescription();
+        Task task = new Events(description, start, end);
+        this.taskList.addTask(task);
+        this.storage.writeEvent(description, start, end);
+    }
 }
