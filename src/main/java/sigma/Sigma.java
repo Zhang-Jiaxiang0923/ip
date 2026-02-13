@@ -52,6 +52,9 @@ public class Sigma {
             String line = sc.nextLine();
             this.ui.showDivisionLine();
             try {
+                if (line.isEmpty()) {
+                    throw new MissingElementException("Oops, the input is empty.");
+                }
                 ParsedInput input = Parser.parseInput(line);
                 CommandType command = input.getCommand();
                 switch (command) {
@@ -127,6 +130,7 @@ public class Sigma {
      * Generates a response for the user's chat message.
      */
     public String getResponse(String input) {
+        assert !input.isEmpty() : "Input of GUI is empty";
         try {
             ParsedInput parsedInput = Parser.parseInput(input);
             CommandType command = parsedInput.getCommand();
