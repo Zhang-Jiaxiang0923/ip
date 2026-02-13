@@ -69,7 +69,7 @@ public class Ui {
         } else {
             printMessage("Here are the tasks in your list:");
             for (int i = 1; i <= taskList.getLength(); i++) {
-                printMessage(i + "." + taskList.getTask(i - 1));
+                printMessage(i + "." + taskList.getTask(i-1));
             }
         }
     }
@@ -125,5 +125,29 @@ public class Ui {
     }
 
 
+
+    public void printMarkMessage(Task task) {
+        printMessage("Nice! I've marked this task as done:");
+        printMessage("  " + task);
+    }
+
+    public void printUnmarkMessage(Task task) {
+        printMessage("Ok, I've marked this task as not done yet:");
+        printMessage("  " + task);
+    }
+
+    public void printDeleteMessage(Task task, int length) {
+        printMessage("Noted. I've removed this task:");
+        printMessage("  " + task);
+        printMessage(String.format("Now you have %d tasks in the list", length));
+
+    }
+
+    public void printAddMessage(TaskList tasklist) {
+        int length = tasklist.getLength();
+        printMessage("Got it. I've added this task:");
+        printMessage("  " + tasklist.getTask(length-1));
+        printMessage(String.format("Now you have %d tasks in the list.", length));
+    }
 
 }
