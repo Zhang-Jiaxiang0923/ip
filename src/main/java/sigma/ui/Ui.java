@@ -150,4 +150,9 @@ public class Ui {
         printMessage(String.format("Now you have %d tasks in the list.", length));
     }
 
+    public void printArchiveMessage(Task task) {
+        printMessage("Nice! I've archived this task as done:");
+        printMessage("  " + task);
+    }
+
 }

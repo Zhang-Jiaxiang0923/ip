@@ -34,9 +34,9 @@ public class Sigma {
      * Constructs the Sigma class by the target path
      * @param target The path where the Sigma where store the data in.
      */
-    public Sigma(Path target) {
+    public Sigma(Path target, Path archivePath) {
         ui = new Ui();
-        this.storage = new Storage(target);
+        this.storage = new Storage(target, archivePath);
         this.taskList = new TaskList();
     }
 
@@ -99,6 +99,10 @@ public class Sigma {
                     this.ui.printAddMessage(taskList);
                     break;
                 }
+                case ARCHIVE: {
+                   handleArchive(input);
+                   this.ui.printArchiveMessage(taskList.getTask(input.getIndex()));
+                }
                 default:
                 }
 
@@ -123,7 +127,9 @@ public class Sigma {
     public static void main(String[] args) {
         Path target = Paths.get(System.getProperty("user.dir"))
                 .resolve(Paths.get("data", "Sigma.txt"));
-        new Sigma(target).run();
+        Path archivePath = Paths.get(System.getProperty("user.dir"))
+                .resolve(Paths.get("data", "archive.txt"));
+        new Sigma(target, archivePath).run();
     }
 
     /**
@@ -270,5 +276,13 @@ public class Sigma {
         Task task = new Events(description, start, end);
         this.taskList.addTask(task);
         this.storage.writeEvent(description, start, end);
+    }
+
+    public void handleArchive(ParsedInput input) {
+        int index = input.getIndex();
+        if (index >= taskList.getLength() || index < 0) {
+            throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
+        }
+        this.storage.archiveTask(input.getIndex());
     }
 }

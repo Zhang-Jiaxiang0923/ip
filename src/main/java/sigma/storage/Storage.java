@@ -20,14 +20,18 @@ import sigma.task.ToDos;
 public class Storage {
     private final Path target;
     private List<String> lines;
+    private final Path archivePath;
+    private List<String> archiveLines;
 
     /**
      * Constructs the storage object.
      * @param target The file path that the storage object will load and write to.
      */
-    public Storage(Path target) {
+    public Storage(Path target, Path archivePath) {
         this.lines = new ArrayList<>();
         this.target = target;
+        this.archivePath = archivePath;
+        this.archiveLines = new ArrayList<>();
     }
 
     /**
@@ -42,9 +46,13 @@ public class Storage {
             if (Files.notExists(target)) {
                 Files.createDirectories(target.getParent());
                 Files.createFile(target);
+            } else if (Files.notExists(archivePath)) {
+                Files.createDirectories(archivePath.getParent());
+                Files.createFile(archivePath);
             } else {
                 try {
                     this.lines = Files.readAllLines(this.target);
+                    this.archiveLines = Files.readAllLines(this.archivePath);
                     readFromDisk(taskList);
                 } catch (CorruptedFileException e) {
                     Files.deleteIfExists(target);
@@ -197,6 +205,19 @@ public class Storage {
             Files.write(target, lines);
         } catch (IOException e) {
             throw new RuntimeException("Failed to write in the file.", e);
+        }
+    }
+
+    public void archiveTask(int index) {
+        try {
+            if (index < 0 || index >= lines.size()) {
+                throw new IllegalArgumentException("Invalid task index: " + index);
+            }
+            String line = lines.get(index);
+            archiveLines.add(line);
+            Files.write(archivePath, archiveLines);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to archive into the file.");
         }
     }
 
