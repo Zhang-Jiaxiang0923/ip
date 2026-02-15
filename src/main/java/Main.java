@@ -12,7 +12,9 @@ import sigma.Sigma;
 public class Main extends Application {
     private static final Path target = Paths.get(System.getProperty("user.dir"))
             .resolve(Paths.get("data", "Sigma.txt"));
-    private final Sigma sigma = new Sigma(target);
+    private static final Path archivePath = Paths.get(System.getProperty("user.dir"))
+            .resolve(Paths.get("data", "archive.txt"));
+    private final Sigma sigma = new Sigma(target, archivePath);
 
 
     @Override

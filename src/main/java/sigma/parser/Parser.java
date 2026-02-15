@@ -67,6 +67,17 @@ public class Parser {
                 throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
             }
         }
+        case "archive": {
+            if (parts.length == 1) {
+                throw new MissingElementException("Oops, missing number. Which task do you want to archive?");
+            } else if (parts.length == 2) {
+                String taskNum = parts[1];
+                int index = Integer.parseInt(taskNum) - 1;
+                return new ParsedInput(CommandType.ARCHIVE, index);
+            } else {
+                throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
+            }
+        }
         case "look": {
             if (parts.length == 1) {
                 throw new MissingElementException("Oops, missing keywords. Which keyword do you want to look for?");
