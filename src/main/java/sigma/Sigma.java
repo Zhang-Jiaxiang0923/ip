@@ -102,6 +102,7 @@ public class Sigma {
                 case ARCHIVE: {
                    handleArchive(input);
                    this.ui.printArchiveMessage(taskList.getTask(input.getIndex()));
+                   break;
                 }
                 default:
                 }
@@ -147,69 +148,41 @@ public class Sigma {
                 return this.ui.getTasks(this.taskList);
             case MARK: {
                 int index = parsedInput.getIndex();
-                if (index >= taskList.getLength() || index < 0) {
-                    throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
-                }
-                taskList.markTask(index);
-                this.storage.writeMark(index);
-                return "Nice! I've marked this task as done:" + "\n"
-                        + "  " + taskList.getTask(index);
+                handleMark(parsedInput);
+                return this.ui.getMarkMessage(taskList.getTask(index));
             }
             case UNMARK: {
                 int index = parsedInput.getIndex();
-                if (index >= taskList.getLength() || index < 0) {
-                    throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
-                }
-                taskList.unmarkTask(index);
-                this.storage.writeUnmark(index);
-                return "Nice! I've marked this task as hasn't done:" + "\n"
-                        + "  " + taskList.getTask(index);
+                handleUnmark(parsedInput);
+                return this.ui.getUnmarkMessage(taskList.getTask(index));
+
             }
             case DELETE: {
                 int index = parsedInput.getIndex();
-                if (index >= taskList.getLength() || index < 0) {
-                    throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
-                }
-                this.taskList.deleteTask(index);
-                this.storage.writeDelete(index);
-                return "Noted. I've removed this task:\n"
-                        + "  " + taskList.getTask(index)
-                        + String.format("Now you have %d tasks in the list", taskList.getLength());
+                int len = taskList.getLength();
+                handleDelete(parsedInput);
+                return this.ui.getDeleteMessage(taskList.getTask(index), len);
 
+            }
+            case ARCHIVE: {
+                handleArchive(parsedInput);
+                return this.ui.getArchiveMessage(taskList.getTask(parsedInput.getIndex()));
             }
             case LOOK: {
                 ArrayList<Task> finding = this.taskList.lookUp(parsedInput.getDescription());
                 return this.ui.getFinding(finding);
             }
             case TODO: {
-                String description = parsedInput.getDescription();
-                Task task = new ToDos(description);
-                taskList.addTask(task);
-                this.storage.writeTodo(description);
-                return "Got it. I've added this task:\n"
-                        + "  " + task + "\n"
-                        + String.format("Now you have %d tasks in the list.", taskList.getLength());
+                handleTodo(parsedInput);
+                return this.ui.getAddMessage(taskList);
             }
             case DEADLINE: {
-                LocalDate end = parsedInput.getEnd();
-                String description = parsedInput.getDescription();
-                Task task = new Deadlines(description, end);
-                taskList.addTask(task);
-                this.storage.writeDeadline(description, end);
-                return "Got it. I've added this task:\n"
-                        + "  " + task + "\n"
-                        + String.format("Now you have %d tasks in the list.", taskList.getLength());
+                handleDeadline(parsedInput);
+                return this.ui.getAddMessage(taskList);
             }
             case EVENT: {
-                LocalDate end = parsedInput.getEnd();
-                LocalDate start = parsedInput.getStart();
-                String description = parsedInput.getDescription();
-                Task task = new Events(description, start, end);
-                this.taskList.addTask(task);
-                this.storage.writeEvent(description, start, end);
-                return "Got it. I've added this task:\n"
-                        + "  " + task + "\n"
-                        + String.format("Now you have %d tasks in the list.", taskList.getLength());
+                handleEvent(parsedInput);
+                return this.ui.getAddMessage(taskList);
             }
             default:
                 return "";

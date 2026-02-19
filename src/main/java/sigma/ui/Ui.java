@@ -124,7 +124,33 @@ public class Ui {
         return "Bye. Hope to see you again soon!";
     }
 
+    public String getArchiveMessage(Task task) {
+        return "Nice! I've archived this task:\n" + "  " + task;
+    }
 
+    public String getMarkMessage(Task task) {
+        return "Nice! I've marked this task as done:" + "\n"
+                + "  " + task;
+    }
+
+    public String getUnmarkMessage(Task task) {
+        return "Nice! I've marked this task as hasn't done:" + "\n"
+                + "  " + task;
+    }
+
+    public String getDeleteMessage(Task task, int len) {
+        return "Noted. I've removed this task:\n"
+                + "  " + task
+                + String.format("Now you have %d tasks in the list", len);
+    }
+
+    public String getAddMessage(TaskList taskList) {
+        int len = taskList.getLength();
+        Task task = taskList.getTask(len-1);
+        return "Got it. I've added this task:\n"
+                + "  " + task + "\n"
+                + String.format("Now you have %d tasks in the list.", len);
+    }
 
     public void printMarkMessage(Task task) {
         printMessage("Nice! I've marked this task as done:");
@@ -151,7 +177,7 @@ public class Ui {
     }
 
     public void printArchiveMessage(Task task) {
-        printMessage("Nice! I've archived this task as done:");
+        printMessage("Nice! I've archived this task:");
         printMessage("  " + task);
     }
 
