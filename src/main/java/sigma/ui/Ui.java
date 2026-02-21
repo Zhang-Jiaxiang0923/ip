@@ -18,7 +18,7 @@ public class Ui {
                     + "|____/ |___|  \\____| |_|  |_|/_/   \\_\\\n";
     private static final String NAME = "Sigma";
     private static final int WIDTH = 60;
-    private static final String indentation = "    ";
+    private static final String INDENTATION = "    ";
 
     public Ui() {
 
@@ -29,17 +29,17 @@ public class Ui {
      */
     public void showWelcome() {
         System.out.println("Hello from\n" + LOGO);
-        System.out.println(indentation + "_".repeat(WIDTH));
-        System.out.println(indentation + "Hello! I'm " + NAME);
-        System.out.println(indentation + "What can I do for you?");
-        System.out.println(indentation + "_".repeat(WIDTH));
+        System.out.println(INDENTATION + "_".repeat(WIDTH));
+        System.out.println(INDENTATION + "Hello! I'm " + NAME);
+    System.out.println(INDENTATION + "What can I do for you?");
+        System.out.println(INDENTATION + "_".repeat(WIDTH));
     }
 
     /**
      * Prints the division line between user input and application output.
      */
     public void showDivisionLine() {
-        System.out.println(indentation + "_".repeat(WIDTH));
+        System.out.println(INDENTATION + "_".repeat(WIDTH));
     }
 
     /**
@@ -48,7 +48,7 @@ public class Ui {
      * @param message The message to be printed.
      */
     public void printMessage(String message) {
-        System.out.println(indentation + message);
+        System.out.println(INDENTATION + message);
     }
 
     /**
