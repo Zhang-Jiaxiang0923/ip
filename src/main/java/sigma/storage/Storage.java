@@ -83,7 +83,7 @@ public class Storage {
             switch (p[0].trim()) {
             case "T": {
                 Task task = new ToDos(p[2].trim());
-                if (p[1].equals("1")) {
+                if (p[1].equals(" 1 ")) {
                     task.markAsDone();
                 }
                 taskList.addTask(task);
@@ -91,7 +91,7 @@ public class Storage {
             }
             case "D": {
                 Task task = new Deadlines(p[2].trim(), LocalDate.parse(p[4].trim()));
-                if (p[1].equals("1")) {
+                if (p[1].equals(" 1 ")) {
                     task.markAsDone();
                 }
                 taskList.addTask(task);
@@ -99,7 +99,7 @@ public class Storage {
             }
             case "E": {
                 Task task = new Events(p[2].trim(), LocalDate.parse(p[3].trim()), LocalDate.parse(p[4].trim()));
-                if (p[1].equals("1")) {
+                if (p[1].equals(" 1 ")) {
                     task.markAsDone();
                 }
                 taskList.addTask(task);
