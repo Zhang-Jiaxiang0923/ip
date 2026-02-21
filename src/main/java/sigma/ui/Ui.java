@@ -152,6 +152,11 @@ public class Ui {
                 + String.format("Now you have %d tasks in the list.", len);
     }
 
+    public String getWelcomeMessage() {
+        return "Hello! I'm Sigma. \n"
+            + "What can I do for you?" + "\n";
+    }
+
     public void printMarkMessage(Task task) {
         printMessage("Nice! I've marked this task as done:");
         printMessage("  " + task);

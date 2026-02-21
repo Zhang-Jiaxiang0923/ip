@@ -38,6 +38,7 @@ public class Sigma {
         ui = new Ui();
         this.storage = new Storage(target, archivePath);
         this.taskList = new TaskList();
+        this.storage.load(this.taskList);
     }
 
     /**
@@ -45,7 +46,6 @@ public class Sigma {
      */
     public void run() {
         Scanner sc = new Scanner(System.in);
-        this.storage.load(this.taskList);
         this.ui.showWelcome();
         Loop:
         while (sc.hasNextLine()) {
@@ -257,5 +257,9 @@ public class Sigma {
             throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
         }
         this.storage.archiveTask(input.getIndex());
+    }
+
+    public String getWelcomeMessage() {
+        return this.ui.getWelcomeMessage(); // 如果你 Ui 里叫别的名字，就改成对应的
     }
 }

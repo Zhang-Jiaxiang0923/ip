@@ -30,6 +30,9 @@ public class MainWindow extends AnchorPane {
     /** Injects the Sigma instance */
     public void setSigma(Sigma sigma) {
         this.sigma = sigma;
+        dialogContainer.getChildren().add(
+                DialogBox.getSigmaDialog(sigma.getWelcomeMessage(), sigmaImage)
+        );
     }
 
     @FXML
