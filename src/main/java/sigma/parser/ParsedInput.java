@@ -35,7 +35,7 @@ public class ParsedInput {
      */
     public ParsedInput(CommandType command, int index) {
         assert command != null;
-        assert index > 0;
+        assert index >= 0;
         this.command = command;
         this.index = index;
     }

@@ -140,8 +140,8 @@ public class Ui {
 
     public String getDeleteMessage(Task task, int len) {
         return "Noted. I've removed this task:\n"
-                + "  " + task
-                + String.format("Now you have %d tasks in the list", len);
+                + "  " + task + "\n"
+                + String.format("Now you have %d tasks in the list", len - 1);
     }
 
     public String getAddMessage(TaskList taskList) {

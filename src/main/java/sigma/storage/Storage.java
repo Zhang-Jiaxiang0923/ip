@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sigma.exception.CorruptedFileException;
+import sigma.exception.InvalidIndexException;
 import sigma.task.Deadlines;
 import sigma.task.Events;
 import sigma.task.Task;
@@ -46,20 +47,22 @@ public class Storage {
             if (Files.notExists(target)) {
                 Files.createDirectories(target.getParent());
                 Files.createFile(target);
-            } else if (Files.notExists(archivePath)) {
+            }
+
+            if (Files.notExists(archivePath)) {
                 Files.createDirectories(archivePath.getParent());
                 Files.createFile(archivePath);
-            } else {
-                try {
-                    this.lines = Files.readAllLines(this.target);
-                    this.archiveLines = Files.readAllLines(this.archivePath);
-                    readFromDisk(taskList);
-                } catch (CorruptedFileException e) {
-                    Files.deleteIfExists(target);
-                    Files.createDirectories(target.getParent());
-                    Files.createFile(target);
-                }
             }
+            try {
+                this.lines = Files.readAllLines(this.target);
+                this.archiveLines = Files.readAllLines(this.archivePath);
+                readFromDisk(taskList);
+            } catch (CorruptedFileException e) {
+                Files.deleteIfExists(target);
+                Files.createDirectories(target.getParent());
+                Files.createFile(target);
+            }
+
         } catch (IOException e) {
             throw new RuntimeException("File does not exist and cannot create file: " + target, e);
         }
@@ -114,6 +117,9 @@ public class Storage {
      */
     public void writeMark(int index) {
         try {
+            if (index < 0 || index >= lines.size()) {
+                throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
+            }
             String content = lines.get(index);
             String[] p = content.split("\\|", -1);
             p[1] = " 1 ";
@@ -131,6 +137,9 @@ public class Storage {
      */
     public void writeUnmark(int index) {
         try {
+            if (index < 0 || index >= lines.size()) {
+                throw new InvalidIndexException("Oops, the index of task is invalid •﹏•");
+            }
             String content = lines.get(index);
             String[] p = content.split("\\|", -1);
             p[1] = " 0 ";
@@ -149,7 +158,7 @@ public class Storage {
     public void writeDelete(int index) {
         try {
             if (index < 0 || index >= lines.size()) {
-                throw new IllegalArgumentException("Invalid task index: " + index);
+                throw new InvalidIndexException("Invalid task index: " + index);
             }
             lines.remove(index);
             Files.write(target, lines);
@@ -211,7 +220,7 @@ public class Storage {
     public void archiveTask(int index) {
         try {
             if (index < 0 || index >= lines.size()) {
-                throw new IllegalArgumentException("Invalid task index: " + index);
+                throw new InvalidIndexException("Invalid task index: " + index);
             }
             String line = lines.get(index);
             archiveLines.add(line);

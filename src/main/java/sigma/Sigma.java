@@ -65,17 +65,21 @@ public class Sigma {
                     this.ui.printTasks(this.taskList);
                     break;
                 case MARK: {
+                    int index = input.getIndex();
                     handleMark(input);
-                    this.ui.printMarkMessage(taskList.getTask(input.getIndex()));
+                    this.ui.printMarkMessage(taskList.getTask(index));
                     break;
                 }
                 case UNMARK: {
+                    int index = input.getIndex();
                     handleUnmark(input);
-                    this.ui.printUnmarkMessage(taskList.getTask(input.getIndex()));
+                    this.ui.printUnmarkMessage(taskList.getTask(index));
                     break;
                 }
                 case DELETE: {
-                    this.ui.printDeleteMessage(taskList.getTask(input.getIndex()), taskList.getLength()-1);
+                    int index = input.getIndex();
+                    int len = taskList.getLength();
+                    this.ui.printDeleteMessage(taskList.getTask(index), len - 1);
                     handleDelete(input);
                     break;
                 }
@@ -100,9 +104,9 @@ public class Sigma {
                     break;
                 }
                 case ARCHIVE: {
-                   handleArchive(input);
-                   this.ui.printArchiveMessage(taskList.getTask(input.getIndex()));
-                   break;
+                    handleArchive(input);
+                    this.ui.printArchiveMessage(taskList.getTask(input.getIndex()));
+                    break;
                 }
                 default:
                 }
@@ -113,6 +117,8 @@ public class Sigma {
                 this.ui.printMessage("Sorry, I don't know what that means QAQ");
             } catch (InvalidIndexException | NumberFormatException e) {
                 this.ui.printMessage("Oops, need a valid number as task index Ծ‸Ծ");
+            } catch (RuntimeException e) {
+                ui.printMessage("Oops, something went wrong: " + e.getMessage());
             } finally {
                 this.ui.showDivisionLine();
             }
@@ -160,8 +166,9 @@ public class Sigma {
             case DELETE: {
                 int index = parsedInput.getIndex();
                 int len = taskList.getLength();
+                String message = this.ui.getDeleteMessage(taskList.getTask(index), len);
                 handleDelete(parsedInput);
-                return this.ui.getDeleteMessage(taskList.getTask(index), len);
+                return message;
 
             }
             case ARCHIVE: {
